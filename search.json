@@ -1,0 +1,205 @@
+[
+  {
+    "objectID": "tuto/r.html",
+    "href": "tuto/r.html",
+    "title": "Exemples d’utilisation des données du recensement au format Parquet\n",
+    "section": "",
+    "text": "Ce tutoriel vise à offrir une approche complémentaire au guide d’utilisation des données du recensement au format Parquet publié sur https://ssphub.netlify.app pour accompagner la diffusion de celles-ci par l’Insee.\nIl s’agit d’un tutoriel préparé pour l’atelier tuto@mate à l’EHESS le 5 novembre 2024. Ce tutoriel est exclusivement en R. Les slides de la présentation sont disponibles ci-dessous:\nIl propose des exemples variés pour illustrer la simplicité d’usage du format Parquet. Parmi ceux-ci:"
+  },
+  {
+    "objectID": "tuto/r.html#requêtes-sur-les-colonnes-select",
+    "href": "tuto/r.html#requêtes-sur-les-colonnes-select",
+    "title": "Exemples d’utilisation des données du recensement au format Parquet\n",
+    "section": "Requêtes sur les colonnes (SELECT)",
+    "text": "Requêtes sur les colonnes (SELECT)\nL’une des forces du format Parquet est de simplifier l’import de fichiers volumineux qui ne comportent que quelques colonnes nous intéressant. Par exemple, la table des individus comporte 88 colonnes, il est peu probable qu’une seule analyse s’intéresse à toutes celles-ci (ou elle risque d’être fort indigeste).\n\nComme cela est illustré dans Tip 1, la différence de volumétrie entre un fichier non filtré et un fichier filtré est importante.\n\n\nDuckDB via tidyverse\nDuckDB exclusivement\n\n\n\n\ntable_individu %&gt;%\n  select(poids = IPONDI, AGED, VOIT) %&gt;%\n  head(10)\n\n\n  \n\n\n\n\n\n\nquery &lt;- glue(\n  \"FROM read_parquet(\\\"{filename_table_individu}\\\") \",\n  \"SELECT IPONDI AS poids, AGED, VOIT \",\n  \"LIMIT 10\"\n)\ndbGetQuery(\n  con,\n  query\n)\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\nTip 1: Comprendre l’optimisation permise par Parquet et DuckDB\n\n\n\n\n\nPour réduire la volumétrie des données importées, il est possible de mettre en oeuvre deux stratégies:\n\nN’importer qu’un nombre limité de colonnes\nN’importer qu’un nombre limité de lignes\n\nComme cela a été évoqué dans les slides, le format Parquet est particulièrement optimisé pour le premier besoin. C’est donc généralement la première optimisation mise en oeuvre. Pour s’en convaincre on peut regarder la taille des données importées dans deux cas:\n\nOn utilise beaucoup de lignes mais peu de colonnes\nOn utilise beaucoup de colonnes mais peu de lignes\n\nPour cela, nous utilisons la fonction SQL EXPLAIN ANALYZE disponible dans duckdb. Elle décompose le plan d’exécution de duckdb, ce qui nous permettra de comprendre la stratégie d’optimisation. Elle permet aussi de connaître le volume de données importées lorsqu’on récupère un fichier d’internet. En effet, duckdb est malin: plutôt que de télécharger un fichier entier pour n’en lire qu’une partie, la librairie est capable de n’importer que les blocs du fichier qui l’intéresse.\nCeci nécessite l’utilisation de l’extension httpfs (un peu l’équivalent des library de R en duckdb). Elle s’installe et s’utilise de la manière suivante\n\ndbExecute(\n  con,\n  glue(\n    \"INSTALL httpfs;\",\n    \"LOAD httpfs;\"\n  )\n)\n\nDemandons à DuckDB d’exécuter la requête “beaucoup de colonnes, pas beaucoup de lignes” et regardons le plan d’exécution et les informations données par DuckDB:\n\nVoir le plan : “beaucoup de colonnes, pas beaucoup de lignes”\n\nplan &lt;- dbGetQuery(\n  con,\n  glue(  \n    'EXPLAIN ANALYZE ',\n    'SELECT * FROM read_parquet(\"{url_table_logement}\") LIMIT 5'\n  )\n)\n\n\nprint(plan)\n\nanalyzed_plan\n┌─────────────────────────────────────┐\n│┌───────────────────────────────────┐│\n││    Query Profiling Information    ││\n│└───────────────────────────────────┘│\n└─────────────────────────────────────┘\nEXPLAIN ANALYZE SELECT * FROM read_parquet(\"https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-logements-ordinaires-en-2020-1/20231023-123618/fd-logemt-2020.parquet\") LIMIT 5\n┌─────────────────────────────────────┐\n│┌───────────────────────────────────┐│\n││            HTTP Stats:            ││\n││                                   ││\n││            in: 78.0 MiB           ││\n││            out: 0 bytes           ││\n││              #HEAD: 1             ││\n││              #GET: 6              ││\n││              #PUT: 0              ││\n││              #POST: 0             ││\n│└───────────────────────────────────┘│\n└─────────────────────────────────────┘\n┌─────────────────────────────────────┐\n│┌───────────────────────────────────┐│\n││         Total Time: 1.53s         ││\n│└───────────────────────────────────┘│\n└─────────────────────────────────────┘\n┌───────────────────────────┐\n│      RESULT_COLLECTOR     │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│             0             │\n│          (0.00s)          │\n└─────────────┬─────────────┘                             \n┌─────────────┴─────────────┐\n│      EXPLAIN_ANALYZE      │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│             0             │\n│          (0.00s)          │\n└─────────────┬─────────────┘                             \n┌─────────────┴─────────────┐\n│           LIMIT           │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│             5             │\n│          (0.00s)          │\n└─────────────┬─────────────┘                             \n┌─────────────┴─────────────┐\n│       READ_PARQUET        │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│          COMMUNE          │\n│            ARM            │\n│            IRIS           │\n│            ACHL           │\n│            AEMM           │\n│           AEMMR           │\n│          AGEMEN8          │\n│            ANEM           │\n│           ANEMR           │\n│           ASCEN           │\n│            BAIN           │\n│            BATI           │\n│          CATIRIS          │\n│            CATL           │\n│            CHAU           │\n│            CHFL           │\n│            CHOS           │\n│            CLIM           │\n│            CMBL           │\n│            CUIS           │\n│           DEROU           │\n│           DIPLM           │\n│            EAU            │\n│           EGOUL           │\n│            ELEC           │\n│           EMPLM           │\n│            GARL           │\n│            HLML           │\n│          ILETUDM          │\n└───────────────────────────┘                             \n\n\n\nVoir le plan : “pas de colonnes, beaucoup de lignes”\n\nplan &lt;- dbGetQuery(\n  con,\n  glue(  \n    'EXPLAIN ANALYZE ',\n    'SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet(\"{url_table_individu}\") LIMIT 10000'\n  )\n)\n\n\nprint(plan)\n\nanalyzed_plan\n┌─────────────────────────────────────┐\n│┌───────────────────────────────────┐│\n││    Query Profiling Information    ││\n│└───────────────────────────────────┘│\n└─────────────────────────────────────┘\nEXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet(\"https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-individus-localises-au-canton-ou-ville-2020-1/20231023-122841/fd-indcvi-2020.parquet\") LIMIT 10000\n┌─────────────────────────────────────┐\n│┌───────────────────────────────────┐│\n││            HTTP Stats:            ││\n││                                   ││\n││            in: 11.0 MiB           ││\n││            out: 0 bytes           ││\n││              #HEAD: 1             ││\n││              #GET: 14             ││\n││              #PUT: 0              ││\n││              #POST: 0             ││\n│└───────────────────────────────────┘│\n└─────────────────────────────────────┘\n┌─────────────────────────────────────┐\n│┌───────────────────────────────────┐│\n││         Total Time: 1.26s         ││\n│└───────────────────────────────────┘│\n└─────────────────────────────────────┘\n┌───────────────────────────┐\n│      RESULT_COLLECTOR     │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│             0             │\n│          (0.00s)          │\n└─────────────┬─────────────┘                             \n┌─────────────┴─────────────┐\n│      EXPLAIN_ANALYZE      │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│             0             │\n│          (0.00s)          │\n└─────────────┬─────────────┘                             \n┌─────────────┴─────────────┐\n│           LIMIT           │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│           10000           │\n│          (0.00s)          │\n└─────────────┬─────────────┘                             \n┌─────────────┴─────────────┐\n│       READ_PARQUET        │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│           IPONDI          │\n│            AGED           │\n│            VOIT           │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│        EC: 19735576       │\n│   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │\n│           40960           │\n│          (4.96s)          │\n└───────────────────────────┘                             \n\n\nLa comparaison de ces plans d’exécution montre l’intérêt de faire un filtre sur les colonnes : les besoins computationnels sont drastiquement diminués. Le filtre sur les lignes n’arrive que dans un second temps, une fois les colonnes sélectionnées.\nPourquoi seulement un rapport de 1 à 4 entre le poids des deux fichiers ? C’est parce que nos requêtes comportent toute deux la variable IPONDI (les poids à utiliser pour extrapoler l’échantillon à la population) qui est à haute précision là où beaucoup d’autres colonnes comportent un nombre réduit de modalités et sont donc peu volumineuses.\n\n\n\nDuckDB propose également des fonctionnalités pour extraire des colonnes à travers des expressions régulières. Cette approche est également possible avec le tidyverse\n\n\nDuckDB via tidyverse\nDuckDB exclusivement\n\n\n\n\ntable_individu %&gt;%\n  select(poids = IPONDI, contains(\"AGE\")) %&gt;%\n  head(10)\n\n\n  \n\n\n\n\n\n\ndbGetQuery(\n  con,\n  glue(\n    \"FROM read_parquet(\\\"{filename_table_individu}\\\") \",\n    \"SELECT IPONDI AS poids, COLUMNS('.*AGE.*') \",\n    \"LIMIT 10\"\n  )\n)"
+  },
+  {
+    "objectID": "tuto/r.html#requêtes-sur-les-lignes-where",
+    "href": "tuto/r.html#requêtes-sur-les-lignes-where",
+    "title": "Exemples d’utilisation des données du recensement au format Parquet\n",
+    "section": "Requêtes sur les lignes (WHERE)",
+    "text": "Requêtes sur les lignes (WHERE)\n\n\nDuckDB via tidyverse\nDuckDB exclusivement\n\n\n\n\ntable_individu %&gt;%\n  filter(DEPT %in% c(\"11\", \"31\", \"34\")) %&gt;%\n  head(10)\n\n\n  \n\n\n\n\n\n\ndbGetQuery(\n  con,\n  glue(\n    \"FROM read_parquet(\\\"{filename_table_individu}\\\") \",\n    \"SELECT IPONDI, AGED, DEPT \",\n    \"WHERE DEPT IN ('11', '31', '34') \",\n    \"LIMIT 10\")\n)\n\n\n  \n\n\n\n\n\n\nLes filtres sur les observations peuvent être faits à partir de critères sur plusieurs colonnes. Par exemple, pour ne conserver que les observations de la ville de Nice où la date d’emménagement est postérieure à 2020, la requête suivante peut être utilisée :\n\n\nDuckDB via tidyverse\nDuckDB exclusivement\n\n\n\n\n\n\nListing 1: Ne conserver que les Niçois qui ont emménagé depuis 2021\n\ntable_logement %&gt;% filter(COMMUNE == \"06088\", AEMM &gt; 2020)\n\n\n\n\n\n  \n\n\n\n\n\n\ndbGetQuery(\n  con,\n  glue(\n    \"FROM read_parquet(\\\"{filename_table_logement}\\\") \",\n    \"SELECT * \",\n    \"WHERE COMMUNE = '06088' and AEMM &gt; 2020 \",\n    \"LIMIT 10\"\n  )\n)"
+  },
+  {
+    "objectID": "tuto/r.html#exemples-sans-groupes",
+    "href": "tuto/r.html#exemples-sans-groupes",
+    "title": "Exemples d’utilisation des données du recensement au format Parquet\n",
+    "section": "Exemples sans groupes",
+    "text": "Exemples sans groupes\nLa fonction DISTINCT appliquée à la variable ARM permet d’extraire la liste des codes arrondissements présents dans la base de données.\n\n\nDuckDB via tidyverse\nDuckDB exclusivement\n\n\n\n\ntable_logement %&gt;%\n  filter(str_detect(ARM, \"ZZZZZ\", negate = TRUE)) %&gt;%\n  summarise(ARM = distinct(ARM)) %&gt;%\n  arrange(ARM)\n\n\n  \n\n\n\n\n\n\nquery &lt;- glue_sql(\n    \"FROM read_parquet({filename_table_logement}) \",\n    \"SELECT DISTINCT(ARM) \",\n    \"WHERE NOT CONTAINS(ARM, 'ZZZZZ') \",\n    \"ORDER BY ARM\",\n    .con=con\n)\npaste(dbGetQuery(con, query)$ARM, collapse = \", \")\n\n[1] \"13201, 13202, 13203, 13204, 13205, 13206, 13207, 13208, 13209, 13210, 13211, 13212, 13213, 13214, 13215, 13216, 69381, 69382, 69383, 69384, 69385, 69386, 69387, 69388, 69389, 75101, 75102, 75103, 75104, 75105, 75106, 75107, 75108, 75109, 75110, 75111, 75112, 75113, 75114, 75115, 75116, 75117, 75118, 75119, 75120\"\n\n\n\n\n\nIl est possible d’extraire des statistiques beaucoup plus raffinées par le biais d’une requête SQL plus complexe. Par exemple pour calculer le nombre d’habitants de Toulouse qui ont changé de logement en un an:\n\n\nDuckDB via tidyverse\nDuckDB exclusivement\n\n\n\n\ntable_logement %&gt;%\n  filter(COMMUNE == '31555', !IRANM %in% c('1', 'Z'), INPER != \"Y\") %&gt;%\n  mutate(INPER = as.integer(INPER)) %&gt;%\n  summarise(habitants_toulouse_demenagement = as.integer(sum(IPONDL * INPER)))\n\nWarning: Missing values are always removed in SQL aggregation functions.\nUse `na.rm = TRUE` to silence this warning\nThis warning is displayed once every 8 hours.\n\n\n\n  \n\n\n\n\n\n\nquery &lt;- paste(\n  glue(\"FROM read_parquet(\\\"{filename_table_logement}\\\")\"),\n  \"SELECT CAST(SUM(IPONDL*CAST(INPER AS INT)) AS INT) \",\n  \"AS habitants_toulouse_demenagement\",\n  \"WHERE COMMUNE == '31555' AND IRANM NOT IN ('1', 'Z') AND INPER != 'Y'\",\n  sep = \" \")\ndbGetQuery(con, query)"
+  },
+  {
+    "objectID": "tuto/r.html#statistiques-par-groupe",
+    "href": "tuto/r.html#statistiques-par-groupe",
+    "title": "Exemples d’utilisation des données du recensement au format Parquet\n",
+    "section": "Statistiques par groupe",
+    "text": "Statistiques par groupe\n\n# Bar chart: distribution des âges\npyramide_ages &lt;- table_individu %&gt;%\n  filter(DEPT %in% c('11', '31', '34')) %&gt;%\n  group_by(AGED, departement = DEPT) %&gt;%\n  summarise(individus = sum(IPONDI), .groups = \"drop\") %&gt;%\n  arrange(departement, AGED) %&gt;%\n  collect()\n\nggplot(pyramide_ages, aes(x = AGED, y = individus)) +\n  geom_bar(aes(fill = departement), stat = \"identity\") +\n  geom_vline(xintercept = 18, color = \"grey\", linetype = \"dashed\") +\n  facet_wrap(~departement, scales = \"free_y\", nrow = 3) +\n  theme_minimal() +\n  labs(y = \"Individus recensés\", x = \"Âge\")\n\n\n\n\n\n\n\nExemple 2\n\n# Carte : Répartition des plus de 60 ans par département\n# Part des plus de 60 ans par département\npart_population_60_plus &lt;- table_individu %&gt;%\n  group_by(DEPT) %&gt;%\n  summarise(\n    total_population = sum(IPONDI), # Population totale\n    population_60_plus = sum(IPONDI[AGED &gt; 60]) # Population de plus de 60 ans\n  ) %&gt;%\n  mutate(pourcentage_60_plus = population_60_plus / total_population * 100) %&gt;%\n  collect()\n\n# Joindre les données au fond de carte des départements\ndepartements_60_plus_sf &lt;- departements %&gt;%\n  inner_join(\n    part_population_60_plus,\n    by = c(\"INSEE_DEP\" = \"DEPT\")\n  )\n\n# Carte \nggplot(departements_60_plus_sf) +\n    geom_sf(aes(fill = pourcentage_60_plus)) + \n    scale_fill_fermenter(n.breaks = 5, palette = \"PuBuGn\", direction = 1) + \n    theme_void() + \n    labs(\n        title = \"Part des personnes de plus de 60 ans par département\",\n        caption = \"Source: Insee, Fichiers détails du recensement de la population\",\n        fill = \"Part (%)\"\n    )"
+  },
+  {
+    "objectID": "tuto/r.html#footnotes",
+    "href": "tuto/r.html#footnotes",
+    "title": "Exemples d’utilisation des données du recensement au format Parquet\n",
+    "section": "Footnotes",
+    "text": "Footnotes\n\nSi vous avez clôné le dépôt disponible sur Github , un environnement virtuel renv vous permet de recréer la même configuration logicielle que celle utilisée pour générer cette page. Pour cela, il suffit de faire renv::restore().↩︎\nPour en savoir plus sur ce projet, se rendre sur la documentation du projet.↩︎"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Atelier tutomate",
+    "section": "",
+    "text": "Atelier tutomate\nvffffjfj"
+  },
+  {
+    "objectID": "slides/index.html#plan",
+    "href": "slides/index.html#plan",
+    "title": "Le format de données Parquet",
+    "section": "Plan",
+    "text": "Plan\n\nContexte\nPourquoi le format Parquet ?"
+  },
+  {
+    "objectID": "slides/index.html#le-recensement-de-la-population",
+    "href": "slides/index.html#le-recensement-de-la-population",
+    "title": "Le format de données Parquet",
+    "section": "Le recensement de la population",
+    "text": "Le recensement de la population\n\nMission historique de l’Insee depuis 1946\n\nL’Insee organise, les communes réalisent la collecte\n\n\n\n\nUne source d’utilité publique :\n\nPopulations légales: dotations de l’État aux communes, organisation des scrutins, équipements publics, etc.\nRecherche: caractéristiques socio-démographiques, mobilités…\n\n\n\n\n\n\n\n\nEnquêtes annuelles de recensement (EAR) depuis 2004\n\n\n\nPour une commune de moins de 10 000 habitants:\n\nCollecte exhaustive une fois tous les 5 ans.\n\nPour une commune de plus de 10 000 habitants:\n\nChaque année, 8% des logements sont recensés ;\nLe résultat du recensement est calculé à partir des 5 dernières années (=40% logements)\n\n\nDocumentation technique sur le recensement"
+  },
+  {
+    "objectID": "slides/index.html#une-diffusion-sous-plusieurs-formes",
+    "href": "slides/index.html#une-diffusion-sous-plusieurs-formes",
+    "title": "Le format de données Parquet",
+    "section": "Une diffusion sous plusieurs formes",
+    "text": "Une diffusion sous plusieurs formes\n\nDiffusion sur insee.fr sous plusieurs formes:\n\nPages “dynamiques” sur insee.fr\nExports d’agrégats depuis statistiques-locales.insee.fr/\nDes données, des cartes, des publications, etc..\n\n\n\n\nMais beaucoup de gestes manuels pour obtenir un seul agrégat\n\n\n\n\nUne information parfois difficile à trouver sur le site de l’Insee"
+  },
+  {
+    "objectID": "slides/index.html#une-diffusion-sous-plusieurs-formes-1",
+    "href": "slides/index.html#une-diffusion-sous-plusieurs-formes-1",
+    "title": "Le format de données Parquet",
+    "section": "Une diffusion sous plusieurs formes",
+    "text": "Une diffusion sous plusieurs formes\n\nLes fichiers agrégés\n\n\n\nStructure type: une ligne par commune ou IRIS\n\n\n\nTaille de chaque fichier relativement raisonnable\n\nCSV généralement de quelques Mo, jusqu’à 150 Mo"
+  },
+  {
+    "objectID": "slides/index.html#une-diffusion-sous-plusieurs-formes-2",
+    "href": "slides/index.html#une-diffusion-sous-plusieurs-formes-2",
+    "title": "Le format de données Parquet",
+    "section": "Une diffusion sous plusieurs formes",
+    "text": "Une diffusion sous plusieurs formes\n\nLes micro-données anonymisées\n\n\nStructure type: une ligne par observation\n\nUn logement, un individu…\n\n\n\n\nPermet de construire d’autres croisements que ceux proposés sur insee.fr\n\n\n\n\n\n\n\n\n\nUn format destiné à des utilisateurs avancés\n\n\n\nUne source riche mais des précautions d’emploi à respecter:\n\nPondérations à prendre en compte\nInterprétation des petits effectifs…\n\nDemande une certaine expertise"
+  },
+  {
+    "objectID": "slides/index.html#défi",
+    "href": "slides/index.html#défi",
+    "title": "Le format de données Parquet",
+    "section": "Défi",
+    "text": "Défi\n\nCe sont des fichiers très volumineux\n\nJusqu’à 100 variables et 25 millions de lignes\nFichier CSV jusqu’à 5 Go\n\n\n\n\nPour l’Insee : complexes à produire et valider avant diffusion\n\n\n\n\nPour l’utilisateur.trice : complexes à télécharger, stocker et exploiter"
+  },
+  {
+    "objectID": "slides/index.html#solution-historique",
+    "href": "slides/index.html#solution-historique",
+    "title": "Le format de données Parquet",
+    "section": "Solution historique",
+    "text": "Solution historique\n\nDiffusion zippée (CSV) ou format DBase (format propriétaire)\n\nDécoupage en fichiers par grandes zones de régions"
+  },
+  {
+    "objectID": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion",
+    "href": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion",
+    "title": "Le format de données Parquet",
+    "section": "Une source idéale pour innover dans la diffusion",
+    "text": "Une source idéale pour innover dans la diffusion\n\nMontée en puissance du format Parquet pour les usages internes à l’Insee:\n\nPourquoi ne pas offrir le même confort à l’externe ?\n\n\n\n\nUne demande d’utilisateurs.trices averti.e.s\n\nPar exemple Eric Mauvière"
+  },
+  {
+    "objectID": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion-1",
+    "href": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion-1",
+    "title": "Le format de données Parquet",
+    "section": "Une source idéale pour innover dans la diffusion",
+    "text": "Une source idéale pour innover dans la diffusion\n\nPublication en octobre 2023 des données et d’un guide d’utilisation"
+  },
+  {
+    "objectID": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion-2",
+    "href": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion-2",
+    "title": "Le format de données Parquet",
+    "section": "Une source idéale pour innover dans la diffusion",
+    "text": "Une source idéale pour innover dans la diffusion\n\nUn accueil enthousiaste des utilisateurs.trices"
+  },
+  {
+    "objectID": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion-3",
+    "href": "slides/index.html#une-source-idéale-pour-innover-dans-la-diffusion-3",
+    "title": "Le format de données Parquet",
+    "section": "Une source idéale pour innover dans la diffusion",
+    "text": "Une source idéale pour innover dans la diffusion\n\nD’autres institutions l’utilisent maintenant pour leur diffusion\n\n\n\n\n\nStatistiques sur longue période des crimes et délis"
+  },
+  {
+    "objectID": "slides/index.html#parquet-cest-quoi",
+    "href": "slides/index.html#parquet-cest-quoi",
+    "title": "Le format de données Parquet",
+    "section": "Parquet : c’est quoi ?",
+    "text": "Parquet : c’est quoi ?\n\nUn format de données adapté…\n\nAux données volumineuses ;\nAux données complexes (exemple: 01004 pour le code commune d’Ambérieu-en-Bugey)\n\n\n\n\nUn format de données opensource bien intégré:\n\nA l’écosystème R, Python et Observable"
+  },
+  {
+    "objectID": "slides/index.html#parquet-pourquoi",
+    "href": "slides/index.html#parquet-pourquoi",
+    "title": "Le format de données Parquet",
+    "section": "Parquet : pourquoi ?",
+    "text": "Parquet : pourquoi ?\n\nFormat léger, très compressé:\n\nEntre 5 et 20 fois plus léger qu’un CSV\nPas de perte d’efficacité en lecture\n\n\n\n\n\n\n\n\n\n\nExemple: recensement de la population\n\n\n\n20 millions de lignes, 88 colonnes\n\nCSV: &gt; 5Go\nParquet: 508Mo\n\n\n\n\n\n\n\n\n\n\n\n\nExemple: statistiques de la délinquance\n\n\n\n3.5 millions de lignes:\n\nCSV: 400Mo\nParquet: 11Mo"
+  },
+  {
+    "objectID": "slides/index.html#le-csv-en-apparence-pratique",
+    "href": "slides/index.html#le-csv-en-apparence-pratique",
+    "title": "Le format de données Parquet",
+    "section": "Le CSV: en apparence pratique",
+    "text": "Le CSV: en apparence pratique\n\n\n\n\nFacile à lire, facile à ouvrir, mais\n\n\n\n\n\n\n\n\n\n\nProblème: il faut scanner tout le fichier pour avoir une seule colonne\n\n\n\nLent en lecture, pas compressé\nProblème pour deviner le type d’une variable\nMême si on ne veut que certaines colonnes, il faut lire tout le fichier"
+  },
+  {
+    "objectID": "slides/index.html#parquet-un-format-orienté-colonne",
+    "href": "slides/index.html#parquet-un-format-orienté-colonne",
+    "title": "Le format de données Parquet",
+    "section": "Parquet: un format orienté colonne",
+    "text": "Parquet: un format orienté colonne\n\n\nPlus pratique pour n’ouvrir qu’un sous-ensemble de variables ;\n\nPas besoin de scanner tout le fichier pour étudier quelques variables ;"
+  },
+  {
+    "objectID": "slides/index.html#parquet-quels-avantages",
+    "href": "slides/index.html#parquet-quels-avantages",
+    "title": "Le format de données Parquet",
+    "section": "Parquet : quels avantages ?",
+    "text": "Parquet : quels avantages ?\n\n\nFormat libre, open source, et indépendant du langage ;\n\n\n\nPlus de confort pour les utilisateurs:\n\nDes requêtes plus rapides et efficaces (seulement les données nécessaires sont lues)\nDes données conformes à la mise à disposition par le producteur (plus de problème de codes communes…)"
+  },
+  {
+    "objectID": "slides/index.html#parquet-quels-usages",
+    "href": "slides/index.html#parquet-quels-usages",
+    "title": "Le format de données Parquet",
+    "section": "Parquet : quels usages ?",
+    "text": "Parquet : quels usages ?\n\nFormat privilégié pour la mise à disposition de données internes à l’Insee:\n\nMoins d’asymétries entre utilisateurs et producteurs.\n\n\n\n\n\n\n\n\nPremières diffusions à l’externe\n\n\n\nBureaux de votes du répertoire électoral unique (REU):\nRecensement de la population (RP)\nPlus récemment, la base permanente des équipements (BPE)"
+  },
+  {
+    "objectID": "slides/index.html#parquet-quels-usages-1",
+    "href": "slides/index.html#parquet-quels-usages-1",
+    "title": "Le format de données Parquet",
+    "section": "Parquet : quels usages ?",
+    "text": "Parquet : quels usages ?\n\nviewof source = Inputs.radio([\n  \"Recensement\", \"Répertoire électoral unique\"\n], {value: \"Recensement\"})\n\n\n\n\n\n\n\n\nInputs.table(data)\n\n\n\n\n\n\n\ndata = (source == \"Recensement\") ? rp : reu\n\n\n\n\n\n\n\ndb = DuckDBClient.of({})\n\nrp = db.query(\n  \"SELECT AGED, CATL, SEXE, CANTVILLE, IPONDI FROM read_parquet('https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-individus-localises-au-canton-ou-ville-2020-1/20231023-122841/fd-indcvi-2020.parquet') LIMIT 5\"\n)\nreu = db.query(\n  \"SELECT geo_adresse, id_brut_bv_reu FROM read_parquet('https://static.data.gouv.fr/resources/bureaux-de-vote-et-adresses-de-leurs-electeurs/20230626-135723/table-adresses-reu.parquet') LIMIT 5\"\n)"
+  },
+  {
+    "objectID": "slides/index.html#pourquoi-duckdb",
+    "href": "slides/index.html#pourquoi-duckdb",
+    "title": "Le format de données Parquet",
+    "section": "Pourquoi DuckDB ?",
+    "text": "Pourquoi DuckDB ?\n\nParquet ne résout pas tout:\n\nL’espace disque est optimisé\nLes données décompressées doivent passer en RAM\n\n\n❓️ Comment analyser ces données sur un PC avec 8 GB de RAM ?"
+  },
+  {
+    "objectID": "slides/index.html#pourquoi-duckdb-1",
+    "href": "slides/index.html#pourquoi-duckdb-1",
+    "title": "Le format de données Parquet",
+    "section": "Pourquoi DuckDB ?",
+    "text": "Pourquoi DuckDB ?"
+  },
+  {
+    "objectID": "slides/index.html#pourquoi-duckdb-2",
+    "href": "slides/index.html#pourquoi-duckdb-2",
+    "title": "Le format de données Parquet",
+    "section": "Pourquoi DuckDB ?",
+    "text": "Pourquoi DuckDB ?\n\n\n\nDuckDB est un utilitaire open source\n\nUn logiciel en ligne de commande tout simple (20Mo)…\nDes librairies ,  et Observable pour simplifier l’usage\nRequêtes SQL mais aussi intégration tidyverse pour \n\n\n\n\n\n\n\n\n\nDuckDB est très efficace:\n\nMoteur SQL enrichi avec des fonctions très pratiques pour l’analyse\nOptimisations automatiques\nVisualisations sans exécuter sur toute la base\n\n\n\n\n💡 Les avantages du monde des bases de données sans ses inconvénients"
+  },
+  {
+    "objectID": "slides/index.html#idées",
+    "href": "slides/index.html#idées",
+    "title": "Le format de données Parquet",
+    "section": "Idées",
+    "text": "Idées\n\nTuto ssphub\nFaire une carte des résidences secondaires en France\nModes de transport\nDistribution par âge\n\n\n\n\nAtelier tuto@mate"
+  }
+]
