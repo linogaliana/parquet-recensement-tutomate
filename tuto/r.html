@@ -213,7 +213,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">cartiflette</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com">gt</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com">gt</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jthomasmock/gtExtras">gtExtras</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="téléchargement-des-fichiers" class="level1"><h1>Téléchargement des fichiers</h1>
 <p>Pour commencer, nous allons télécharger les fichiers depuis internet pour limiter les échanges réseaux. Comme nous le verrons ultérieurement, ce n’est en fait pas indispensable car <code>duckdb</code> optimise les données téléchargées à chaque requête.</p>
@@ -441,7 +442,7 @@ EXPLAIN ANALYZE SELECT * FROM read_parquet("https://static.data.gouv.fr/resource
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 2.73s         ││
+││         Total Time: 1.82s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -532,7 +533,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 2.08s         ││
+││         Total Time: 1.31s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -563,7 +564,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 │        EC: 19735576       │
 │   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
 │           40960           │
-│          (7.68s)          │
+│          (5.00s)          │
 └───────────────────────────┘                             </code></pre>
 </div>
 </div>
@@ -854,7 +855,7 @@ Listing&nbsp;3: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"},{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -887,6 +888,598 @@ Listing&nbsp;3: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 </div>
 </div>
 </div>
+<p>Si on préfère représenter ceci sous forme de tableau, on peut utiliser le <em>package</em> <a href="https://gt.rstudio.com/"><code>gt</code></a>.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code pour avoir le classement des départements pour lesquels la population de plus de 60 ans est la plus importante</summary><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">top_population</span> <span class="op">&lt;-</span> <span class="va">part_population_60_plus</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">pourcentage_60_plus</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://gt.rstudio.com/reference/gt.html">gt</a></span><span class="op">(</span></span>
+<span>  <span class="va">top_population</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://jthomasmock.github.io/gtExtras/reference/gt_plt_bar_pct.html">gt_plt_bar_pct</a></span><span class="op">(</span></span>
+<span>    column <span class="op">=</span> <span class="va">pourcentage_60_plus</span>,</span>
+<span>    scaled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    labels <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://gt.rstudio.com/reference/fmt_number.html">fmt_number</a></span><span class="op">(</span></span>
+<span>    columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"total_population"</span>, <span class="st">"population_60_plus"</span><span class="op">)</span>,</span>
+<span>    decimals <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    sep_mark <span class="op">=</span> <span class="st">" "</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://gt.rstudio.com/reference/fmt_number.html">fmt_number</a></span><span class="op">(</span></span>
+<span>      columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"pourcentage_60_plus"</span><span class="op">)</span>,</span>
+<span>      decimals <span class="op">=</span> <span class="fl">1</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://gt.rstudio.com/reference/cols_label.html">cols_label</a></span><span class="op">(</span></span>
+<span>    DEPT <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">"**Département**"</span><span class="op">)</span>,</span>
+<span>    total_population <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">"**Population**"</span><span class="op">)</span>,</span>
+<span>    population_60_plus <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">"**Population de plus de 60 ans**"</span><span class="op">)</span>,</span>
+<span>    pourcentage_60_plus <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">"*Part (%)*"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="prjtirihii" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#prjtirihii table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#prjtirihii thead, #prjtirihii tbody, #prjtirihii tfoot, #prjtirihii tr, #prjtirihii td, #prjtirihii th {
+  border-style: none;
+}
+
+#prjtirihii p {
+  margin: 0;
+  padding: 0;
+}
+
+#prjtirihii .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#prjtirihii .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#prjtirihii .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#prjtirihii .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#prjtirihii .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#prjtirihii .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#prjtirihii .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#prjtirihii .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#prjtirihii .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#prjtirihii .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#prjtirihii .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#prjtirihii .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#prjtirihii .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#prjtirihii .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#prjtirihii .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#prjtirihii .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#prjtirihii .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#prjtirihii .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#prjtirihii .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#prjtirihii .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#prjtirihii .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#prjtirihii .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#prjtirihii .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#prjtirihii .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#prjtirihii .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#prjtirihii .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#prjtirihii .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#prjtirihii .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#prjtirihii .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#prjtirihii .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#prjtirihii .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#prjtirihii .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#prjtirihii .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#prjtirihii .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#prjtirihii .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#prjtirihii .gt_left {
+  text-align: left;
+}
+
+#prjtirihii .gt_center {
+  text-align: center;
+}
+
+#prjtirihii .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#prjtirihii .gt_font_normal {
+  font-weight: normal;
+}
+
+#prjtirihii .gt_font_bold {
+  font-weight: bold;
+}
+
+#prjtirihii .gt_font_italic {
+  font-style: italic;
+}
+
+#prjtirihii .gt_super {
+  font-size: 65%;
+}
+
+#prjtirihii .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#prjtirihii .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#prjtirihii .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#prjtirihii .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#prjtirihii .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#prjtirihii .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#prjtirihii .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#prjtirihii .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#prjtirihii div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead><tr class="header gt_col_headings">
+<th id="DEPT" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><strong>Département</strong></th>
+<th id="total_population" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><strong>Population</strong></th>
+<th id="population_60_plus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><strong>Population de plus de 60 ans</strong></th>
+<th id="pourcentage_60_plus" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><em>Part (%)</em></th>
+</tr></thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_right" headers="DEPT">23</td>
+<td class="gt_row gt_right" headers="total_population">116 178</td>
+<td class="gt_row gt_right" headers="population_60_plus">45 561</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:39.2166362088074%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">39.2%</span>
+</div>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="DEPT">46</td>
+<td class="gt_row gt_right" headers="total_population">174 397</td>
+<td class="gt_row gt_right" headers="population_60_plus">67 122</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:38.4882025548937%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">38.5%</span>
+</div>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="DEPT">58</td>
+<td class="gt_row gt_right" headers="total_population">202 728</td>
+<td class="gt_row gt_right" headers="population_60_plus">76 108</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:37.5418027454679%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">37.5%</span>
+</div>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="DEPT">24</td>
+<td class="gt_row gt_right" headers="total_population">413 180</td>
+<td class="gt_row gt_right" headers="population_60_plus">153 405</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:37.127805018488%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">37.1%</span>
+</div>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="DEPT">15</td>
+<td class="gt_row gt_right" headers="total_population">144 321</td>
+<td class="gt_row gt_right" headers="population_60_plus">51 594</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:35.7497247701039%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">35.7%</span>
+</div>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="DEPT">32</td>
+<td class="gt_row gt_right" headers="total_population">191 737</td>
+<td class="gt_row gt_right" headers="population_60_plus">68 261</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:35.6016441914448%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">35.6%</span>
+</div>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="DEPT">36</td>
+<td class="gt_row gt_right" headers="total_population">218 469</td>
+<td class="gt_row gt_right" headers="population_60_plus">77 537</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:35.4912510882021%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">35.5%</span>
+</div>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="DEPT">17</td>
+<td class="gt_row gt_right" headers="total_population">655 648</td>
+<td class="gt_row gt_right" headers="population_60_plus">232 006</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:35.3857271407507%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">35.4%</span>
+</div>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="DEPT">03</td>
+<td class="gt_row gt_right" headers="total_population">335 380</td>
+<td class="gt_row gt_right" headers="population_60_plus">118 481</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:35.3274693072412%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">35.3%</span>
+</div>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="DEPT">19</td>
+<td class="gt_row gt_right" headers="total_population">239 286</td>
+<td class="gt_row gt_right" headers="population_60_plus">84 511</td>
+<td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
+<div style="background:purple;width:35.3178989650683%;height:16px;display:flex;align-items:center;justify-content:flex-start;position:relative;">
+<span style="color:#FFFFFF;position:absolute;left:0px;margin-left:5px;font-weight:bold;font-size:10px;">35.3%</span>
+</div>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </section><section id="exemple-3-part-des-résidences-secondaires-et-des-logements-vacants" class="level3"><h3 class="anchored" data-anchor-id="exemple-3-part-des-résidences-secondaires-et-des-logements-vacants">Exemple 3: part des résidences secondaires et des logements vacants</h3>
 <p>Il est tout à fait possible de faire des étapes antérieures de préparation de données, notamment de création de variables avec <code>mutate</code>.</p>
 <p>L’exemple suivant illustre la préparation de données avant la construction de statistiques descriptives de la manière suivante:</p>
@@ -895,7 +1488,7 @@ Listing&nbsp;3: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <li>Décompte des logements par département</li>
 </ol>
 <div class="cell">
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">parc_locatif</span> <span class="op">&lt;-</span> <span class="va">table_logement</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">parc_locatif</span> <span class="op">&lt;-</span> <span class="va">table_logement</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>DEPT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substr.html">substring</a></span><span class="op">(</span><span class="va">COMMUNE</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    DEPT <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span></span>
@@ -910,7 +1503,7 @@ Listing&nbsp;3: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="annotated-cell-14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Jointure avec le fond de carte des départements</span></span>
+<div class="sourceCode" id="annotated-cell-15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Jointure avec le fond de carte des départements</span></span>
 <span><span class="va">parc_locatif_sf</span> <span class="op">&lt;-</span> <span class="va">departements</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">parc_locatif</span>,</span>
@@ -922,14 +1515,14 @@ Listing&nbsp;3: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <span>  <span class="va">ungroup</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-annotation">
 <dl>
-<dt data-target-cell="annotated-cell-14" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-15" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-14" data-code-lines="6" data-code-annotation="1">On a des clés dupliquées dans le fond <code>cartiflette</code> (le zoom pour l’Ile de France) et dans le <em>dataframe</em> (4 valeurs par dep)</span>
+<span data-code-cell="annotated-cell-15" data-code-lines="6" data-code-annotation="1">On a des clés dupliquées dans le fond <code>cartiflette</code> (le zoom pour l’Ile de France) et dans le <em>dataframe</em> (4 valeurs par dep)</span>
 </dd>
 </dl>
 </div>
 </div>
-<details class="code-fold"><summary>Code pour produire la carte</summary><div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Carte: Part des résidences secondaires</span></span>
+<details class="code-fold"><summary>Code pour produire la carte</summary><div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Carte: Part des résidences secondaires</span></span>
 <span><span class="va">carte1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">parc_locatif_sf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">CATL</span> <span class="op">==</span> <span class="st">"3"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">p</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_fermenter</a></span><span class="op">(</span></span>
@@ -972,22 +1565,23 @@ Listing&nbsp;3: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="r_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="r_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Résidences secondaires</figcaption></figure>
 </div>
 </div>
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="r_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="r_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Logements vacants</figcaption></figure>
 </div>
 </div>
 </div>
 </div>
 </section></section></section><section id="enrichissement-grâce-aux-jointures" class="level1"><h1>Enrichissement grâce aux jointures</h1>
-<p>Un autre cas d’usage classique est l’association de sources de données pour enrichir celles-ci à partir d’informations communes. Pour illustrer cette approche, nous allons montrer comment faire ceci en associant notre source de données aux modalités de la variable sur le mode de transport issue de la documentation de notre source.</p>
+<p>Un autre cas d’usage classique est l’association de sources de données pour enrichir celles-ci à partir d’informations communes à partir de dimensions communes.</p>
+<p>Pour illustrer cette approche, nous allons montrer comment faire ceci en associant notre source de données aux modalités de la variable sur le mode de transport issue de la documentation de notre source. Cela nous permet d’enrichir notre jeu de données d’informations intéressantes pour la représentation graphique et l’analyse.</p>
 <div class="cell">
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">transports_age</span> <span class="op">&lt;-</span> <span class="va">table_individu</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">transports_age</span> <span class="op">&lt;-</span> <span class="va">table_individu</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    DEPT <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span></span>
 <span>      <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="va">DEPT</span>, <span class="st">"97"</span><span class="op">)</span>,</span>
@@ -1004,7 +1598,7 @@ Listing&nbsp;3: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <pre><code>`summarise()` has grouped output by "DEPT" and "AGEREVQ". You can override
 using the `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Part des modes de transport par âge et département</span></span>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Part des modes de transport par âge et département</span></span>
 <span><span class="va">transports_age</span> <span class="op">&lt;-</span> <span class="va">transports_age</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">DEPT</span>, <span class="va">AGEREVQ</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">DEPT</span> <span class="op">==</span> <span class="fl">75</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
@@ -1027,7 +1621,7 @@ using the `.groups` argument.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="r_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="r_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
