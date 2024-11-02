@@ -447,7 +447,7 @@ EXPLAIN ANALYZE SELECT * FROM read_parquet("https://static.data.gouv.fr/resource
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 2.94s         ││
+││         Total Time: 1.61s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -538,7 +538,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 1.88s         ││
+││         Total Time: 1.06s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -569,7 +569,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 │        EC: 19735576       │
 │   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
 │           40960           │
-│          (7.42s)          │
+│          (4.17s)          │
 └───────────────────────────┘                             </code></pre>
 </div>
 </div>
@@ -867,7 +867,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"},{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -903,7 +903,14 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 <p>Si on préfère représenter ceci sous forme de tableau, on peut utiliser le <em>package</em> <a href="https://gt.rstudio.com/"><code>gt</code></a>.</p>
 <div class="cell">
 <details class="code-fold"><summary>Code pour avoir le classement des départements pour lesquels la population de plus de 60 ans est la plus importante</summary><div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">top_population</span> <span class="op">&lt;-</span> <span class="va">part_population_60_plus</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span></span>
+<span>    <span class="va">departements</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">INSEE_DEP</span>, <span class="va">LIBELLE_DEPARTEMENT</span> <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_set_geometry</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DEPT"</span> <span class="op">=</span> <span class="st">"INSEE_DEP"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>departement <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">LIBELLE_DEPARTEMENT</span>, <span class="st">" ("</span>, <span class="va">DEPT</span> , <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">DEPT</span>, <span class="op">-</span><span class="va">LIBELLE_DEPARTEMENT</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">pourcentage_60_plus</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span>DEPT <span class="op">=</span> <span class="va">departement</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://gt.rstudio.com/reference/gt.html">gt</a></span><span class="op">(</span></span>
@@ -930,23 +937,23 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 <span>    pourcentage_60_plus <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">"*Part (%)*"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<div id="maybbxfjel" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#maybbxfjel table {
+<div id="mjhvnhznxu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mjhvnhznxu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#maybbxfjel thead, #maybbxfjel tbody, #maybbxfjel tfoot, #maybbxfjel tr, #maybbxfjel td, #maybbxfjel th {
+#mjhvnhznxu thead, #mjhvnhznxu tbody, #mjhvnhznxu tfoot, #mjhvnhznxu tr, #mjhvnhznxu td, #mjhvnhznxu th {
   border-style: none;
 }
 
-#maybbxfjel p {
+#mjhvnhznxu p {
   margin: 0;
   padding: 0;
 }
 
-#maybbxfjel .gt_table {
+#mjhvnhznxu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -972,12 +979,12 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-left-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_caption {
+#mjhvnhznxu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#maybbxfjel .gt_title {
+#mjhvnhznxu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -989,7 +996,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-width: 0;
 }
 
-#maybbxfjel .gt_subtitle {
+#mjhvnhznxu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1001,7 +1008,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-top-width: 0;
 }
 
-#maybbxfjel .gt_heading {
+#mjhvnhznxu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1013,13 +1020,13 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_bottom_border {
+#mjhvnhznxu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_col_headings {
+#mjhvnhznxu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1034,7 +1041,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_col_heading {
+#mjhvnhznxu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1054,7 +1061,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   overflow-x: hidden;
 }
 
-#maybbxfjel .gt_column_spanner_outer {
+#mjhvnhznxu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1066,15 +1073,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 4px;
 }
 
-#maybbxfjel .gt_column_spanner_outer:first-child {
+#mjhvnhznxu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#maybbxfjel .gt_column_spanner_outer:last-child {
+#mjhvnhznxu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#maybbxfjel .gt_column_spanner {
+#mjhvnhznxu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1086,11 +1093,11 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   width: 100%;
 }
 
-#maybbxfjel .gt_spanner_row {
+#mjhvnhznxu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#maybbxfjel .gt_group_heading {
+#mjhvnhznxu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1116,7 +1123,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   text-align: left;
 }
 
-#maybbxfjel .gt_empty_group_heading {
+#mjhvnhznxu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1131,15 +1138,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   vertical-align: middle;
 }
 
-#maybbxfjel .gt_from_md > :first-child {
+#mjhvnhznxu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#maybbxfjel .gt_from_md > :last-child {
+#mjhvnhznxu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#maybbxfjel .gt_row {
+#mjhvnhznxu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1158,7 +1165,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   overflow-x: hidden;
 }
 
-#maybbxfjel .gt_stub {
+#mjhvnhznxu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1171,7 +1178,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#maybbxfjel .gt_stub_row_group {
+#mjhvnhznxu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1185,15 +1192,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   vertical-align: top;
 }
 
-#maybbxfjel .gt_row_group_first td {
+#mjhvnhznxu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#maybbxfjel .gt_row_group_first th {
+#mjhvnhznxu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#maybbxfjel .gt_summary_row {
+#mjhvnhznxu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1203,16 +1210,16 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#maybbxfjel .gt_first_summary_row {
+#mjhvnhznxu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_first_summary_row.thick {
+#mjhvnhznxu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#maybbxfjel .gt_last_summary_row {
+#mjhvnhznxu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1222,7 +1229,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_grand_summary_row {
+#mjhvnhznxu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1232,7 +1239,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#maybbxfjel .gt_first_grand_summary_row {
+#mjhvnhznxu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1242,7 +1249,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-top-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_last_grand_summary_row_top {
+#mjhvnhznxu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1252,11 +1259,11 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_striped {
+#mjhvnhznxu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#maybbxfjel .gt_table_body {
+#mjhvnhznxu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1265,7 +1272,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_footnotes {
+#mjhvnhznxu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1279,7 +1286,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_footnote {
+#mjhvnhznxu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1288,7 +1295,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#maybbxfjel .gt_sourcenotes {
+#mjhvnhznxu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1302,7 +1309,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#maybbxfjel .gt_sourcenote {
+#mjhvnhznxu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1310,85 +1317,85 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#maybbxfjel .gt_left {
+#mjhvnhznxu .gt_left {
   text-align: left;
 }
 
-#maybbxfjel .gt_center {
+#mjhvnhznxu .gt_center {
   text-align: center;
 }
 
-#maybbxfjel .gt_right {
+#mjhvnhznxu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#maybbxfjel .gt_font_normal {
+#mjhvnhznxu .gt_font_normal {
   font-weight: normal;
 }
 
-#maybbxfjel .gt_font_bold {
+#mjhvnhznxu .gt_font_bold {
   font-weight: bold;
 }
 
-#maybbxfjel .gt_font_italic {
+#mjhvnhznxu .gt_font_italic {
   font-style: italic;
 }
 
-#maybbxfjel .gt_super {
+#mjhvnhznxu .gt_super {
   font-size: 65%;
 }
 
-#maybbxfjel .gt_footnote_marks {
+#mjhvnhznxu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#maybbxfjel .gt_asterisk {
+#mjhvnhznxu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#maybbxfjel .gt_indent_1 {
+#mjhvnhznxu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#maybbxfjel .gt_indent_2 {
+#mjhvnhznxu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#maybbxfjel .gt_indent_3 {
+#mjhvnhznxu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#maybbxfjel .gt_indent_4 {
+#mjhvnhznxu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#maybbxfjel .gt_indent_5 {
+#mjhvnhznxu .gt_indent_5 {
   text-indent: 25px;
 }
 
-#maybbxfjel .katex-display {
+#mjhvnhznxu .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#maybbxfjel div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#mjhvnhznxu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead><tr class="header gt_col_headings">
-<th id="DEPT" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><strong>Département</strong></th>
+<th id="DEPT" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Département</strong></th>
 <th id="total_population" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><strong>Population</strong></th>
 <th id="population_60_plus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col"><strong>Population de plus de 60 ans</strong></th>
 <th id="pourcentage_60_plus" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><em>Part (%)</em></th>
 </tr></thead>
 <tbody class="gt_table_body">
 <tr class="odd">
-<td class="gt_row gt_right" headers="DEPT">23</td>
+<td class="gt_row gt_left" headers="DEPT">Creuse (23)</td>
 <td class="gt_row gt_right" headers="total_population">116 178</td>
 <td class="gt_row gt_right" headers="population_60_plus">45 561</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1398,7 +1405,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_right" headers="DEPT">46</td>
+<td class="gt_row gt_left" headers="DEPT">Lot (46)</td>
 <td class="gt_row gt_right" headers="total_population">174 397</td>
 <td class="gt_row gt_right" headers="population_60_plus">67 122</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1408,7 +1415,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_right" headers="DEPT">58</td>
+<td class="gt_row gt_left" headers="DEPT">Nièvre (58)</td>
 <td class="gt_row gt_right" headers="total_population">202 728</td>
 <td class="gt_row gt_right" headers="population_60_plus">76 108</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1418,7 +1425,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_right" headers="DEPT">24</td>
+<td class="gt_row gt_left" headers="DEPT">Dordogne (24)</td>
 <td class="gt_row gt_right" headers="total_population">413 180</td>
 <td class="gt_row gt_right" headers="population_60_plus">153 405</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1428,7 +1435,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_right" headers="DEPT">15</td>
+<td class="gt_row gt_left" headers="DEPT">Cantal (15)</td>
 <td class="gt_row gt_right" headers="total_population">144 321</td>
 <td class="gt_row gt_right" headers="population_60_plus">51 594</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1438,7 +1445,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_right" headers="DEPT">32</td>
+<td class="gt_row gt_left" headers="DEPT">Gers (32)</td>
 <td class="gt_row gt_right" headers="total_population">191 737</td>
 <td class="gt_row gt_right" headers="population_60_plus">68 261</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1448,7 +1455,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_right" headers="DEPT">36</td>
+<td class="gt_row gt_left" headers="DEPT">Indre (36)</td>
 <td class="gt_row gt_right" headers="total_population">218 469</td>
 <td class="gt_row gt_right" headers="population_60_plus">77 537</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1458,7 +1465,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_right" headers="DEPT">17</td>
+<td class="gt_row gt_left" headers="DEPT">Charente-Maritime (17)</td>
 <td class="gt_row gt_right" headers="total_population">655 648</td>
 <td class="gt_row gt_right" headers="population_60_plus">232 006</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1468,7 +1475,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_right" headers="DEPT">03</td>
+<td class="gt_row gt_left" headers="DEPT">Allier (03)</td>
 <td class="gt_row gt_right" headers="total_population">335 380</td>
 <td class="gt_row gt_right" headers="population_60_plus">118 481</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
@@ -1478,7 +1485,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 </div></td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_right" headers="DEPT">19</td>
+<td class="gt_row gt_left" headers="DEPT">Corrèze (19)</td>
 <td class="gt_row gt_right" headers="total_population">239 286</td>
 <td class="gt_row gt_right" headers="population_60_plus">84 511</td>
 <td class="gt_row gt_left" headers="pourcentage_60_plus"><div style="flex-grow:1;margin-left:8px;background:#e1e1e1;">
