@@ -165,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul>
 </li>
   <li><a href="#enrichissement-gr%C3%A2ce-aux-jointures" id="toc-enrichissement-grâce-aux-jointures" class="nav-link" data-scroll-target="#enrichissement-gr%C3%A2ce-aux-jointures">Enrichissement grâce aux jointures</a></li>
-  <li><a href="#vers-le-geoparquet" id="toc-vers-le-geoparquet" class="nav-link" data-scroll-target="#vers-le-geoparquet">Vers le <code>geoparquet</code></a></li>
+  <li><a href="#le-format-parquet-pour-les-donn%C3%A9es-g%C3%A9ographiques" id="toc-le-format-parquet-pour-les-données-géographiques" class="nav-link" data-scroll-target="#le-format-parquet-pour-les-donn%C3%A9es-g%C3%A9ographiques">Le format <code>Parquet</code> pour les données géographiques</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -240,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="va">url_table_individu</span> <span class="op">&lt;-</span> <span class="st">"https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-individus-localises-au-canton-ou-ville-2020-1/20231023-122841/fd-indcvi-2020.parquet"</span></span>
 <span><span class="va">url_doc_logement</span> <span class="op">&lt;-</span> <span class="st">"https://www.data.gouv.fr/fr/datasets/r/c274705f-98db-4d9b-9674-578e04f03198"</span></span>
 <span><span class="va">url_doc_individu</span> <span class="op">&lt;-</span> <span class="st">"https://www.data.gouv.fr/fr/datasets/r/1c6c6ab2-b766-41a4-90f0-043173d5e9d1"</span></span>
-<span></span>
+<span><span class="va">url_bpe</span> <span class="op">&lt;-</span> <span class="st">"https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"</span></span>
 <span></span>
 <span><span class="va">filename_table_logement</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_split.html">str_split_i</a></span><span class="op">(</span><span class="va">url_table_logement</span>, <span class="st">"/"</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">filename_table_individu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_split.html">str_split_i</a></span><span class="op">(</span><span class="va">url_table_individu</span>, <span class="st">"/"</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
@@ -249,7 +249,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="fu">download_if_not_exists</span><span class="op">(</span><span class="va">url_table_logement</span>, <span class="va">filename_table_logement</span><span class="op">)</span></span>
 <span><span class="fu">download_if_not_exists</span><span class="op">(</span><span class="va">url_table_individu</span>, <span class="va">filename_table_individu</span><span class="op">)</span></span>
 <span><span class="fu">download_if_not_exists</span><span class="op">(</span><span class="va">url_doc_logement</span>, <span class="st">"dictionnaire_variables_logemt_2020.csv"</span><span class="op">)</span></span>
-<span><span class="fu">download_if_not_exists</span><span class="op">(</span><span class="va">url_doc_individu</span>, <span class="st">"dictionnaire_variables_indcvi_2020.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu">download_if_not_exists</span><span class="op">(</span><span class="va">url_doc_individu</span>, <span class="st">"dictionnaire_variables_indcvi_2020.csv"</span><span class="op">)</span></span>
+<span><span class="fu">download_if_not_exists</span><span class="op">(</span><span class="va">url_bpe</span>, <span class="st">"BPE2023.parquet"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-annotation">
 <dl>
 <dt data-target-cell="annotated-cell-2" data-target-annotation="1">1</dt>
@@ -447,7 +448,7 @@ EXPLAIN ANALYZE SELECT * FROM read_parquet("https://static.data.gouv.fr/resource
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 1.61s         ││
+││         Total Time: 1.76s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -538,7 +539,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 1.06s         ││
+││         Total Time: 1.22s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -569,7 +570,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 │        EC: 19735576       │
 │   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
 │           40960           │
-│          (4.17s)          │
+│          (4.73s)          │
 └───────────────────────────┘                             </code></pre>
 </div>
 </div>
@@ -787,12 +788,12 @@ This warning is displayed once every 8 hours.</code></pre>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span><span class="op">(</span><span class="st">"FROM read_parquet(\"{filename_table_logement}\")"</span><span class="op">)</span>,</span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span><span class="op">(</span></span>
+<span>  <span class="st">"FROM read_parquet(\"{filename_table_logement}\") "</span>,</span>
 <span>  <span class="st">"SELECT CAST(SUM(IPONDL*CAST(INPER AS INT)) AS INT) "</span>,</span>
-<span>  <span class="st">"AS habitants_toulouse_demenagement"</span>,</span>
-<span>  <span class="st">"WHERE COMMUNE == '31555' AND IRANM NOT IN ('1', 'Z') AND INPER != 'Y'"</span>,</span>
-<span>  sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></span>
+<span>  <span class="st">"AS habitants_toulouse_demenagement "</span>,</span>
+<span>  <span class="st">"WHERE COMMUNE == '31555' AND IRANM NOT IN ('1', 'Z') AND INPER != 'Y'"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">query</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
@@ -867,7 +868,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"},{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -937,23 +938,23 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 <span>    pourcentage_60_plus <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">"*Part (%)*"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<div id="mjhvnhznxu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mjhvnhznxu table {
+<div id="hfxwtmxwut" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hfxwtmxwut table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#mjhvnhznxu thead, #mjhvnhznxu tbody, #mjhvnhznxu tfoot, #mjhvnhznxu tr, #mjhvnhznxu td, #mjhvnhznxu th {
+#hfxwtmxwut thead, #hfxwtmxwut tbody, #hfxwtmxwut tfoot, #hfxwtmxwut tr, #hfxwtmxwut td, #hfxwtmxwut th {
   border-style: none;
 }
 
-#mjhvnhznxu p {
+#hfxwtmxwut p {
   margin: 0;
   padding: 0;
 }
 
-#mjhvnhznxu .gt_table {
+#hfxwtmxwut .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -979,12 +980,12 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-left-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_caption {
+#hfxwtmxwut .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mjhvnhznxu .gt_title {
+#hfxwtmxwut .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -996,7 +997,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-width: 0;
 }
 
-#mjhvnhznxu .gt_subtitle {
+#hfxwtmxwut .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1008,7 +1009,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-top-width: 0;
 }
 
-#mjhvnhznxu .gt_heading {
+#hfxwtmxwut .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1020,13 +1021,13 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_bottom_border {
+#hfxwtmxwut .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_col_headings {
+#hfxwtmxwut .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1041,7 +1042,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_col_heading {
+#hfxwtmxwut .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1061,7 +1062,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   overflow-x: hidden;
 }
 
-#mjhvnhznxu .gt_column_spanner_outer {
+#hfxwtmxwut .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1073,15 +1074,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 4px;
 }
 
-#mjhvnhznxu .gt_column_spanner_outer:first-child {
+#hfxwtmxwut .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mjhvnhznxu .gt_column_spanner_outer:last-child {
+#hfxwtmxwut .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mjhvnhznxu .gt_column_spanner {
+#hfxwtmxwut .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1093,11 +1094,11 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   width: 100%;
 }
 
-#mjhvnhznxu .gt_spanner_row {
+#hfxwtmxwut .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#mjhvnhznxu .gt_group_heading {
+#hfxwtmxwut .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1123,7 +1124,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   text-align: left;
 }
 
-#mjhvnhznxu .gt_empty_group_heading {
+#hfxwtmxwut .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1138,15 +1139,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   vertical-align: middle;
 }
 
-#mjhvnhznxu .gt_from_md > :first-child {
+#hfxwtmxwut .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mjhvnhznxu .gt_from_md > :last-child {
+#hfxwtmxwut .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mjhvnhznxu .gt_row {
+#hfxwtmxwut .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1165,7 +1166,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   overflow-x: hidden;
 }
 
-#mjhvnhznxu .gt_stub {
+#hfxwtmxwut .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1178,7 +1179,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#mjhvnhznxu .gt_stub_row_group {
+#hfxwtmxwut .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1192,15 +1193,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   vertical-align: top;
 }
 
-#mjhvnhznxu .gt_row_group_first td {
+#hfxwtmxwut .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mjhvnhznxu .gt_row_group_first th {
+#hfxwtmxwut .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#mjhvnhznxu .gt_summary_row {
+#hfxwtmxwut .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1210,16 +1211,16 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#mjhvnhznxu .gt_first_summary_row {
+#hfxwtmxwut .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_first_summary_row.thick {
+#hfxwtmxwut .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mjhvnhznxu .gt_last_summary_row {
+#hfxwtmxwut .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1229,7 +1230,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_grand_summary_row {
+#hfxwtmxwut .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1239,7 +1240,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#mjhvnhznxu .gt_first_grand_summary_row {
+#hfxwtmxwut .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1249,7 +1250,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-top-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_last_grand_summary_row_top {
+#hfxwtmxwut .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1259,11 +1260,11 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_striped {
+#hfxwtmxwut .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mjhvnhznxu .gt_table_body {
+#hfxwtmxwut .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1272,7 +1273,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_footnotes {
+#hfxwtmxwut .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1286,7 +1287,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_footnote {
+#hfxwtmxwut .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1295,7 +1296,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#mjhvnhznxu .gt_sourcenotes {
+#hfxwtmxwut .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1309,7 +1310,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#mjhvnhznxu .gt_sourcenote {
+#hfxwtmxwut .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1317,72 +1318,72 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#mjhvnhznxu .gt_left {
+#hfxwtmxwut .gt_left {
   text-align: left;
 }
 
-#mjhvnhznxu .gt_center {
+#hfxwtmxwut .gt_center {
   text-align: center;
 }
 
-#mjhvnhznxu .gt_right {
+#hfxwtmxwut .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mjhvnhznxu .gt_font_normal {
+#hfxwtmxwut .gt_font_normal {
   font-weight: normal;
 }
 
-#mjhvnhznxu .gt_font_bold {
+#hfxwtmxwut .gt_font_bold {
   font-weight: bold;
 }
 
-#mjhvnhznxu .gt_font_italic {
+#hfxwtmxwut .gt_font_italic {
   font-style: italic;
 }
 
-#mjhvnhznxu .gt_super {
+#hfxwtmxwut .gt_super {
   font-size: 65%;
 }
 
-#mjhvnhznxu .gt_footnote_marks {
+#hfxwtmxwut .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#mjhvnhznxu .gt_asterisk {
+#hfxwtmxwut .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mjhvnhznxu .gt_indent_1 {
+#hfxwtmxwut .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mjhvnhznxu .gt_indent_2 {
+#hfxwtmxwut .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mjhvnhznxu .gt_indent_3 {
+#hfxwtmxwut .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mjhvnhznxu .gt_indent_4 {
+#hfxwtmxwut .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mjhvnhznxu .gt_indent_5 {
+#hfxwtmxwut .gt_indent_5 {
   text-indent: 25px;
 }
 
-#mjhvnhznxu .katex-display {
+#hfxwtmxwut .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#mjhvnhznxu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#hfxwtmxwut div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1681,9 +1682,47 @@ Listing&nbsp;7: Type de transport utilisé par les différentes cohortes
 </div>
 </div>
 </div>
-</section><section id="vers-le-geoparquet" class="level1"><h1>Vers le <code>geoparquet</code>
-</h1>
-<p>Exemples à partir de la BPE</p>
+</section><section id="le-format-parquet-pour-les-données-géographiques" class="level1"><h1>Le format <code>Parquet</code> pour les données géographiques</h1>
+<p>Pour illustrer l’intérêt de la diffusion de données géographiques, nous allons utiliser la <a href="https://www.insee.fr/fr/metadonnees/source/serie/s1161">base permanente des équipements</a>, une source qui recense les équipements publics sur le territoire. Le millésime 2023 est, pour la première fois, diffusé au format <code>Parquet</code>. Le dictionnaire des variables de cette source est disponible <a href="https://www.insee.fr/fr/statistiques/8217525?sommaire=8217537#consulter">ici</a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Le format <code>GeoParquet</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Il existe une extension du format <code>Parquet</code> pour les données géographiques: le <a href="https://geoparquet.org/"><code>GeoParquet</code></a>. Ce format de fichier permet de gérer nativement les opérations sur les <em>bounding box</em> des géométries de chaque observation. Cela permet, par exemple, de filtrer les géométries appartenant à un certain rayon. Pour cela, il faut installer l’<a href="https://duckdb.org/docs/extensions/spatial/overview.html">extension <code>SPATIAL</code></a> de <code>duckdb</code>.</p>
+<p>Lorsque la géométrie des données se restreint à des coordonnées ponctuelles, c’est-à-dire à un couple longitude-latitude, le format <code>GeoParquet</code> n’apporte pas de gain particulier. Un <code>Parquet</code> classique, avec les longitudes et latitudes dans deux colonnes, suffit. C’est pour cette raison que la BPE est diffusée sous la forme classique d’un <code>Parquet</code> et non d’un <code>GeoParquet</code>.</p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>En premier lieu, pour illustrer que ce fichier fonctionne de manière identique à précédemment, faisons un filtre à partir des variables de cette base (les géomaticiens parleraient de filtre attributaire). Récupérons exclusivement les établissements d’enseignement dans Aubervilliers:</p>
+<div class="cell">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span><span class="op">(</span></span>
+<span>  <span class="st">"FROM read_parquet('BPE2023.parquet') "</span>,</span>
+<span>  <span class="st">"SELECT * "</span>,</span>
+<span>  <span class="st">"WHERE DEPCOM = '93001' "</span>,</span>
+<span>  <span class="st">"      AND starts_with(TYPEQU, 'C')"</span>,</span>
+<span>  <span class="st">"      AND NOT (starts_with(TYPEQU, 'C6') OR starts_with(TYPEQU, 'C7'))"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">etab_enseignement_auber</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">query</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
 
 
 </section><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
