@@ -97,7 +97,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+}</script><link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><link href="../site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="../site_libs/leaflet-1.3.1/leaflet.js"></script><link href="../site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="../site_libs/proj4-2.6.2/proj4.min.js"></script><script src="../site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="../site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="../site_libs/leaflet-binding-2.2.2/leaflet.js"></script><link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script><link rel="stylesheet" href="../custom.css">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -198,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre>
 <iframe class="sourceCode yaml code-with-copy" src="https://inseefrlab.github.io/formation-bonnes-pratiques-git-R/slides/complete.html#/partie-1-contr%C3%B4le-de-version-avec-git"></iframe>
 </div>
-</details><p>Il propose des exemples variés pour illustrer la simplicité d’usage du format <code>Parquet</code>. Parmi ceux-ci:</p>
+</details><p>Il propose des exemples variés pour illustrer la simplicité d’usage du format <code>Parquet</code>. Parmi ceux-ci, à partir du recensement de la population:</p>
 <ul>
 <li>Recenser les Niçois qui ont emménagé depuis 2021 (<a href="#lst-nice-emmenagement" class="quarto-xref">Listing&nbsp;1</a>)</li>
 <li>Compter les Toulousains qui ont déménagé dans l’année (<a href="#lst-toulouse-logements" class="quarto-xref">Listing&nbsp;2</a>)</li>
@@ -206,6 +210,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Part des plus de 60 ans dans la population de chaque département (<a href="#lst-plus-60ans" class="quarto-xref">Listing&nbsp;4</a>)</li>
 <li>Part des résidences secondaires et des logements vacants dans le parc de chaque logement (<a href="#lst-logement" class="quarto-xref">Listing&nbsp;5</a>)</li>
 <li>Modes de transport pour chaque classe d’âge vivant dans Paris intra-muros (<a href="#lst-transport" class="quarto-xref">Listing&nbsp;7</a>)</li>
+</ul>
+<p>A partir de la base permanent des équipements (BPE):</p>
+<ul>
+<li>Les établissements d’enseignement à Aubervilliers (<a href="#lst-etab-enseignement" class="quarto-xref">Listing&nbsp;8</a>)</li>
 </ul>
 <section id="librairies-utilisées" class="level1"><h1>Librairies utilisées</h1>
 <p>Ce tutoriel utilisera plusieurs librairies <i class="fa-brands fa-r-project" aria-label="r-project"></i>. Celles-ci peuvent être importées ainsi<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
@@ -219,7 +227,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com">gt</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jthomasmock/gtExtras">gtExtras</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jthomasmock/gtExtras">gtExtras</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/">leaflet</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="téléchargement-des-fichiers" class="level1"><h1>Téléchargement des fichiers</h1>
 <p>Pour commencer, nous allons télécharger les fichiers depuis internet pour limiter les échanges réseaux. Comme nous le verrons ultérieurement, ce n’est en fait pas indispensable car <code>duckdb</code> optimise les données téléchargées à chaque requête.</p>
@@ -448,7 +457,7 @@ EXPLAIN ANALYZE SELECT * FROM read_parquet("https://static.data.gouv.fr/resource
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 1.76s         ││
+││         Total Time: 1.89s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -539,7 +548,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 └─────────────────────────────────────┘
 ┌─────────────────────────────────────┐
 │┌───────────────────────────────────┐│
-││         Total Time: 1.22s         ││
+││         Total Time: 1.89s         ││
 │└───────────────────────────────────┘│
 └─────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -570,7 +579,7 @@ EXPLAIN ANALYZE SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://st
 │        EC: 19735576       │
 │   ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │
 │           40960           │
-│          (4.73s)          │
+│          (7.41s)          │
 └───────────────────────────┘                             </code></pre>
 </div>
 </div>
@@ -868,7 +877,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["DEPT"],"name":[1],"type":["chr"],"align":["left"]},{"label":["total_population"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["population_60_plus"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["pourcentage_60_plus"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"14","2":"697686.92","3":"199433.23","4":"28.584918"},{"1":"17","2":"655648.47","3":"232005.98","4":"35.385727"},{"1":"18","2":"301072.20","3":"100202.11","4":"33.281755"},{"1":"40","2":"417812.38","3":"136098.86","4":"32.574156"},{"1":"43","2":"227239.18","3":"72445.48","4":"31.880716"},{"1":"72","2":"566961.54","3":"162227.74","4":"28.613535"},{"1":"12","2":"279545.37","3":"97179.18","4":"34.763296"},{"1":"13","2":"2047977.27","3":"543249.94","4":"26.526170"},{"1":"30","2":"751265.90","3":"225883.79","4":"30.067089"},{"1":"31","2":"1415984.75","3":"310058.60","4":"21.897030"},{"1":"34","2":"1188804.51","3":"330422.00","4":"27.794478"},{"1":"55","2":"183088.24","3":"55209.01","4":"30.154320"},{"1":"56","2":"764058.84","3":"244086.14","4":"31.945988"},{"1":"57","2":"1049516.04","3":"278799.63","4":"26.564589"},{"1":"46","2":"174397.21","3":"67122.35","4":"38.488203"},{"1":"47","2":"330919.11","3":"111975.47","4":"33.837718"},{"1":"68","2":"767121.81","3":"201979.72","4":"26.329550"},{"1":"82","2":"262426.50","3":"75761.51","4":"28.869612"},{"1":"83","2":"1085339.68","3":"358426.55","4":"33.024366"},{"1":"973","2":"285458.55","3":"25489.00","4":"8.929144"},{"1":"02","2":"529490.09","3":"144461.25","4":"27.283089"},{"1":"03","2":"335379.53","3":"118481.10","4":"35.327469"},{"1":"06","2":"1097289.23","3":"337031.52","4":"30.714921"},{"1":"09","2":"154006.07","3":"51667.71","4":"33.549142"},{"1":"76","2":"1254973.74","3":"331670.69","4":"26.428497"},{"1":"15","2":"144320.74","3":"51594.27","4":"35.749725"},{"1":"16","2":"351548.84","3":"115884.21","4":"32.963901"},{"1":"22","2":"603410.46","3":"201335.10","4":"33.366193"},{"1":"24","2":"413180.42","3":"153404.82","4":"37.127805"},{"1":"41","2":"329342.25","3":"104671.50","4":"31.781984"},{"1":"42","2":"768303.19","3":"219589.17","4":"28.581056"},{"1":"45","2":"682749.73","3":"178146.81","4":"26.092549"},{"1":"74","2":"834920.46","3":"186449.67","4":"22.331429"},{"1":"84","2":"561954.21","3":"161719.25","4":"28.778011"},{"1":"86","2":"439061.04","3":"124689.74","4":"28.399181"},{"1":"32","2":"191736.60","3":"68261.38","4":"35.601644"},{"1":"92","2":"1626157.26","3":"327339.59","4":"20.129639"},{"1":"2B","2":"182883.95","3":"54479.64","4":"29.789188"},{"1":"48","2":"76645.61","3":"25173.84","4":"32.844462"},{"1":"63","2":"662131.54","3":"185342.64","4":"27.991817"},{"1":"66","2":"482497.44","3":"159958.60","4":"33.152216"},{"1":"79","2":"374835.53","3":"113764.39","4":"30.350483"},{"1":"80","2":"568719.11","3":"150038.41","4":"26.381813"},{"1":"972","2":"361228.57","3":"104627.26","4":"28.964282"},{"1":"05","2":"140400.13","3":"45765.21","4":"32.596276"},{"1":"07","2":"329398.50","3":"106376.79","4":"32.294255"},{"1":"35","2":"1088818.84","3":"255852.14","4":"23.498137"},{"1":"85","2":"692509.91","3":"219234.73","4":"31.657991"},{"1":"87","2":"372145.25","3":"117712.55","4":"31.630808"},{"1":"88","2":"362471.71","3":"115574.92","4":"31.885226"},{"1":"89","2":"333479.81","3":"104625.81","4":"31.373955"},{"1":"90","2":"139808.35","3":"36675.31","4":"26.232560"},{"1":"91","2":"1305656.77","3":"268140.38","4":"20.536820"},{"1":"75","2":"2145950.15","3":"478627.21","4":"22.303743"},{"1":"28","2":"431412.72","3":"115923.33","4":"26.870632"},{"1":"52","2":"171966.50","3":"55585.30","4":"32.323331"},{"1":"53","2":"306578.99","3":"87148.95","4":"28.426262"},{"1":"64","2":"687138.98","3":"213963.22","4":"31.138274"},{"1":"65","2":"229573.50","3":"79045.43","4":"34.431426"},{"1":"78","2":"1449752.91","3":"317128.81","4":"21.874680"},{"1":"81","2":"390810.65","3":"126793.02","4":"32.443595"},{"1":"971","2":"383551.70","3":"103599.85","4":"27.010661"},{"1":"974","2":"863141.44","3":"153749.53","4":"17.812785"},{"1":"01","2":"658139.06","3":"156036.00","4":"23.708668"},{"1":"36","2":"218468.63","3":"77537.25","4":"35.491251"},{"1":"37","2":"611977.59","3":"171305.03","4":"27.992044"},{"1":"62","2":"1463107.92","3":"372022.39","4":"25.426859"},{"1":"94","2":"1407621.06","3":"282925.14","4":"20.099525"},{"1":"19","2":"239285.70","3":"84510.68","4":"35.317899"},{"1":"21","2":"534634.78","3":"147281.35","4":"27.548030"},{"1":"23","2":"116178.11","3":"45561.15","4":"39.216636"},{"1":"25","2":"545088.37","3":"138643.48","4":"25.435047"},{"1":"26","2":"517223.49","3":"146643.88","4":"28.352131"},{"1":"38","2":"1277717.09","3":"312185.43","4":"24.433064"},{"1":"39","2":"258936.80","3":"79378.46","4":"30.655533"},{"1":"44","2":"1445312.52","3":"347914.79","4":"24.071942"},{"1":"69","2":"1883149.10","3":"414865.15","4":"22.030393"},{"1":"70","2":"234482.96","3":"70894.96","4":"30.234591"},{"1":"71","2":"551118.22","3":"181998.10","4":"33.023424"},{"1":"73","2":"439464.92","3":"120145.54","4":"27.339052"},{"1":"10","2":"311720.71","3":"86872.44","4":"27.868678"},{"1":"11","2":"375358.75","3":"124734.77","4":"33.230815"},{"1":"33","2":"1636550.46","3":"411736.16","4":"25.158782"},{"1":"54","2":"732698.53","3":"189300.86","4":"25.836119"},{"1":"58","2":"202727.62","3":"76107.60","4":"37.541803"},{"1":"59","2":"2607127.55","3":"593625.50","4":"22.769331"},{"1":"93","2":"1654935.59","3":"276442.78","4":"16.704141"},{"1":"27","2":"599566.93","3":"155437.12","4":"25.924898"},{"1":"29","2":"917085.81","3":"277937.30","4":"30.306575"},{"1":"2A","2":"160798.20","3":"49182.37","4":"30.586396"},{"1":"49","2":"819299.26","3":"213786.93","4":"26.093876"},{"1":"50","2":"494897.38","3":"160873.93","4":"32.506523"},{"1":"51","2":"566593.95","3":"144812.46","4":"25.558420"},{"1":"67","2":"1148297.05","3":"283687.26","4":"24.705041"},{"1":"95","2":"1251621.35","3":"237544.38","4":"18.978933"},{"1":"04","2":"165731.69","3":"54998.78","4":"33.185431"},{"1":"08","2":"269983.83","3":"78085.65","4":"28.922343"},{"1":"60","2":"829635.37","3":"191667.26","4":"23.102590"},{"1":"61","2":"278294.89","3":"93452.96","4":"33.580552"},{"1":"77","2":"1428738.22","3":"287073.31","4":"20.092786"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -938,23 +947,23 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
 <span>    pourcentage_60_plus <span class="op">=</span> <span class="fu"><a href="https://gt.rstudio.com/reference/md.html">md</a></span><span class="op">(</span><span class="st">"*Part (%)*"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<div id="hfxwtmxwut" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#hfxwtmxwut table {
+<div id="dpaipbeddh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dpaipbeddh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#hfxwtmxwut thead, #hfxwtmxwut tbody, #hfxwtmxwut tfoot, #hfxwtmxwut tr, #hfxwtmxwut td, #hfxwtmxwut th {
+#dpaipbeddh thead, #dpaipbeddh tbody, #dpaipbeddh tfoot, #dpaipbeddh tr, #dpaipbeddh td, #dpaipbeddh th {
   border-style: none;
 }
 
-#hfxwtmxwut p {
+#dpaipbeddh p {
   margin: 0;
   padding: 0;
 }
 
-#hfxwtmxwut .gt_table {
+#dpaipbeddh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -980,12 +989,12 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-left-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_caption {
+#dpaipbeddh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#hfxwtmxwut .gt_title {
+#dpaipbeddh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -997,7 +1006,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-width: 0;
 }
 
-#hfxwtmxwut .gt_subtitle {
+#dpaipbeddh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1009,7 +1018,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-top-width: 0;
 }
 
-#hfxwtmxwut .gt_heading {
+#dpaipbeddh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1021,13 +1030,13 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_bottom_border {
+#dpaipbeddh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_col_headings {
+#dpaipbeddh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1042,7 +1051,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_col_heading {
+#dpaipbeddh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1062,7 +1071,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   overflow-x: hidden;
 }
 
-#hfxwtmxwut .gt_column_spanner_outer {
+#dpaipbeddh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1074,15 +1083,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 4px;
 }
 
-#hfxwtmxwut .gt_column_spanner_outer:first-child {
+#dpaipbeddh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#hfxwtmxwut .gt_column_spanner_outer:last-child {
+#dpaipbeddh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#hfxwtmxwut .gt_column_spanner {
+#dpaipbeddh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1094,11 +1103,11 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   width: 100%;
 }
 
-#hfxwtmxwut .gt_spanner_row {
+#dpaipbeddh .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#hfxwtmxwut .gt_group_heading {
+#dpaipbeddh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1124,7 +1133,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   text-align: left;
 }
 
-#hfxwtmxwut .gt_empty_group_heading {
+#dpaipbeddh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1139,15 +1148,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   vertical-align: middle;
 }
 
-#hfxwtmxwut .gt_from_md > :first-child {
+#dpaipbeddh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#hfxwtmxwut .gt_from_md > :last-child {
+#dpaipbeddh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#hfxwtmxwut .gt_row {
+#dpaipbeddh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1166,7 +1175,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   overflow-x: hidden;
 }
 
-#hfxwtmxwut .gt_stub {
+#dpaipbeddh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1179,7 +1188,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#hfxwtmxwut .gt_stub_row_group {
+#dpaipbeddh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1193,15 +1202,15 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   vertical-align: top;
 }
 
-#hfxwtmxwut .gt_row_group_first td {
+#dpaipbeddh .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#hfxwtmxwut .gt_row_group_first th {
+#dpaipbeddh .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#hfxwtmxwut .gt_summary_row {
+#dpaipbeddh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1211,16 +1220,16 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#hfxwtmxwut .gt_first_summary_row {
+#dpaipbeddh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_first_summary_row.thick {
+#dpaipbeddh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#hfxwtmxwut .gt_last_summary_row {
+#dpaipbeddh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1230,7 +1239,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_grand_summary_row {
+#dpaipbeddh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1240,7 +1249,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#hfxwtmxwut .gt_first_grand_summary_row {
+#dpaipbeddh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1250,7 +1259,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-top-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_last_grand_summary_row_top {
+#dpaipbeddh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1260,11 +1269,11 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_striped {
+#dpaipbeddh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#hfxwtmxwut .gt_table_body {
+#dpaipbeddh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1273,7 +1282,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-bottom-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_footnotes {
+#dpaipbeddh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1287,7 +1296,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_footnote {
+#dpaipbeddh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1296,7 +1305,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#hfxwtmxwut .gt_sourcenotes {
+#dpaipbeddh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1310,7 +1319,7 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   border-right-color: #D3D3D3;
 }
 
-#hfxwtmxwut .gt_sourcenote {
+#dpaipbeddh .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1318,72 +1327,72 @@ Listing&nbsp;4: Calculer la part des plus de 60 ans dans la population de chaque
   padding-right: 5px;
 }
 
-#hfxwtmxwut .gt_left {
+#dpaipbeddh .gt_left {
   text-align: left;
 }
 
-#hfxwtmxwut .gt_center {
+#dpaipbeddh .gt_center {
   text-align: center;
 }
 
-#hfxwtmxwut .gt_right {
+#dpaipbeddh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#hfxwtmxwut .gt_font_normal {
+#dpaipbeddh .gt_font_normal {
   font-weight: normal;
 }
 
-#hfxwtmxwut .gt_font_bold {
+#dpaipbeddh .gt_font_bold {
   font-weight: bold;
 }
 
-#hfxwtmxwut .gt_font_italic {
+#dpaipbeddh .gt_font_italic {
   font-style: italic;
 }
 
-#hfxwtmxwut .gt_super {
+#dpaipbeddh .gt_super {
   font-size: 65%;
 }
 
-#hfxwtmxwut .gt_footnote_marks {
+#dpaipbeddh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#hfxwtmxwut .gt_asterisk {
+#dpaipbeddh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#hfxwtmxwut .gt_indent_1 {
+#dpaipbeddh .gt_indent_1 {
   text-indent: 5px;
 }
 
-#hfxwtmxwut .gt_indent_2 {
+#dpaipbeddh .gt_indent_2 {
   text-indent: 10px;
 }
 
-#hfxwtmxwut .gt_indent_3 {
+#dpaipbeddh .gt_indent_3 {
   text-indent: 15px;
 }
 
-#hfxwtmxwut .gt_indent_4 {
+#dpaipbeddh .gt_indent_4 {
   text-indent: 20px;
 }
 
-#hfxwtmxwut .gt_indent_5 {
+#dpaipbeddh .gt_indent_5 {
   text-indent: 25px;
 }
 
-#hfxwtmxwut .katex-display {
+#dpaipbeddh .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#hfxwtmxwut div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dpaipbeddh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1706,17 +1715,83 @@ Le format <code>GeoParquet</code>
 <pre><code>[1] TRUE</code></pre>
 </div>
 </div>
-<p>En premier lieu, pour illustrer que ce fichier fonctionne de manière identique à précédemment, faisons un filtre à partir des variables de cette base (les géomaticiens parleraient de filtre attributaire). Récupérons exclusivement les établissements d’enseignement dans Aubervilliers:</p>
+<p>Nous allons mettre en oeuvre une série d’opérations pour montrer que ce fichier fonctionne de manière identique à précédemment.</p>
+<ol type="1">
+<li>En premier lieu, pour illustrer que ce fichier fonctionne de manière identique à précédemment, faisons un filtre à partir des variables de cette base (les géomaticiens parleraient de filtre attributaire). Récupérons exclusivement les établissements d’enseignement dans Aubervilliers<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. On crée une variable temporaire <code>parquet_data</code> dans SQL.</li>
+<li>On joint, directement depuis SQL, au fichier de documentation.</li>
+</ol>
+<p>La requête est un petit peu plus complexe que précédemment, la voici:</p>
 <div class="cell">
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html">glue</a></span><span class="op">(</span></span>
-<span>  <span class="st">"FROM read_parquet('BPE2023.parquet') "</span>,</span>
-<span>  <span class="st">"SELECT * "</span>,</span>
-<span>  <span class="st">"WHERE DEPCOM = '93001' "</span>,</span>
-<span>  <span class="st">"      AND starts_with(TYPEQU, 'C')"</span>,</span>
-<span>  <span class="st">"      AND NOT (starts_with(TYPEQU, 'C6') OR starts_with(TYPEQU, 'C7'))"</span></span>
+<span>  <span class="st">"WITH parquet_data AS ("</span>,</span>
+<span>    <span class="st">"FROM read_parquet('BPE2023.parquet')"</span>,</span>
+<span>    <span class="st">"SELECT * "</span>,</span>
+<span>    <span class="st">"WHERE DEPCOM = '93001'"</span>,</span>
+<span>    <span class="st">"      AND starts_with(TYPEQU, 'C')"</span>,</span>
+<span>    <span class="st">"      AND NOT (starts_with(TYPEQU, 'C6') OR starts_with(TYPEQU, 'C7'))"</span>,</span>
+<span>  <span class="st">")"</span>,</span>
+<span>  <span class="st">"SELECT parquet_data.*, csv_data.Libelle_TYPEQU"</span>,</span>
+<span>  <span class="st">"FROM parquet_data"</span>,</span>
+<span>  <span class="st">"JOIN read_csv_auto('https://www.insee.fr/fr/metadonnees/source/fichier/BPE23_table_passage.csv') AS csv_data"</span>,</span>
+<span>  <span class="st">"     ON parquet_data.TYPEQU = csv_data.TYPEQU"</span>,</span>
+<span>  .sep <span class="op">=</span> <span class="st">"\n"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">etab_enseignement_auber</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">query</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">query</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>WITH parquet_data AS (
+FROM read_parquet('BPE2023.parquet')
+SELECT * 
+WHERE DEPCOM = '93001'
+      AND starts_with(TYPEQU, 'C')
+      AND NOT (starts_with(TYPEQU, 'C6') OR starts_with(TYPEQU, 'C7'))
+)
+SELECT parquet_data.*, csv_data.Libelle_TYPEQU
+FROM parquet_data
+JOIN read_csv_auto('https://www.insee.fr/fr/metadonnees/source/fichier/BPE23_table_passage.csv') AS csv_data
+     ON parquet_data.TYPEQU = csv_data.TYPEQU</code></pre>
+</div>
+</div>
+<p>On peut directement l’exécuter avec <code>duckdb</code> et obtenir le <em>dataframe</em> suivant:</p>
+<div class="cell">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">etab_enseignement_auber</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dbi.r-dbi.org/reference/dbGetQuery.html">dbGetQuery</a></span><span class="op">(</span><span class="va">con</span>, <span class="va">query</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">etab_enseignement_auber</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["AN"],"name":[1],"type":["chr"],"align":["left"]},{"label":["NOMRS"],"name":[2],"type":["chr"],"align":["left"]},{"label":["CNOMRS"],"name":[3],"type":["chr"],"align":["left"]},{"label":["NUMVOIE"],"name":[4],"type":["chr"],"align":["left"]},{"label":["INDREP"],"name":[5],"type":["chr"],"align":["left"]},{"label":["TYPVOIE"],"name":[6],"type":["chr"],"align":["left"]},{"label":["LIBVOIE"],"name":[7],"type":["chr"],"align":["left"]},{"label":["CADR"],"name":[8],"type":["chr"],"align":["left"]},{"label":["CODPOS"],"name":[9],"type":["chr"],"align":["left"]},{"label":["DEPCOM"],"name":[10],"type":["chr"],"align":["left"]},{"label":["DEP"],"name":[11],"type":["chr"],"align":["left"]},{"label":["REG"],"name":[12],"type":["chr"],"align":["left"]},{"label":["DOM"],"name":[13],"type":["chr"],"align":["left"]},{"label":["SDOM"],"name":[14],"type":["chr"],"align":["left"]},{"label":["TYPEQU"],"name":[15],"type":["chr"],"align":["left"]},{"label":["SIRET"],"name":[16],"type":["chr"],"align":["left"]},{"label":["STATUT_DIFFUSION"],"name":[17],"type":["chr"],"align":["left"]},{"label":["CANTINE"],"name":[18],"type":["chr"],"align":["left"]},{"label":["INTERNAT"],"name":[19],"type":["chr"],"align":["left"]},{"label":["RPI"],"name":[20],"type":["chr"],"align":["left"]},{"label":["EP"],"name":[21],"type":["chr"],"align":["left"]},{"label":["CL_PGE"],"name":[22],"type":["chr"],"align":["left"]},{"label":["SECT"],"name":[23],"type":["chr"],"align":["left"]},{"label":["ACCES_AIRE_PRATIQUE"],"name":[24],"type":["chr"],"align":["left"]},{"label":["ACCES_LIBRE"],"name":[25],"type":["chr"],"align":["left"]},{"label":["ACCES_SANITAIRE"],"name":[26],"type":["chr"],"align":["left"]},{"label":["ACCES_VESTIAIRE"],"name":[27],"type":["chr"],"align":["left"]},{"label":["CAPACITE_D_ACCUEIL"],"name":[28],"type":["chr"],"align":["left"]},{"label":["PRES_DOUCHE"],"name":[29],"type":["chr"],"align":["left"]},{"label":["PRES_SANITAIRE"],"name":[30],"type":["chr"],"align":["left"]},{"label":["SAISONNIER"],"name":[31],"type":["chr"],"align":["left"]},{"label":["COUVERT"],"name":[32],"type":["chr"],"align":["left"]},{"label":["ECLAIRE"],"name":[33],"type":["chr"],"align":["left"]},{"label":["CATEGORIE"],"name":[34],"type":["chr"],"align":["left"]},{"label":["MULTIPLEXE"],"name":[35],"type":["chr"],"align":["left"]},{"label":["ACCUEIL"],"name":[36],"type":["chr"],"align":["left"]},{"label":["ITINERANCE"],"name":[37],"type":["chr"],"align":["left"]},{"label":["MODE_GESTION"],"name":[38],"type":["chr"],"align":["left"]},{"label":["SSTYPHEB"],"name":[39],"type":["chr"],"align":["left"]},{"label":["TYPE"],"name":[40],"type":["chr"],"align":["left"]},{"label":["CAPACITE"],"name":[41],"type":["dbl"],"align":["right"]},{"label":["INDIC_CAPA"],"name":[42],"type":["chr"],"align":["left"]},{"label":["NBEQUIDENT"],"name":[43],"type":["dbl"],"align":["right"]},{"label":["INDIC_NBEQUIDENT"],"name":[44],"type":["chr"],"align":["left"]},{"label":["NBSALLES"],"name":[45],"type":["dbl"],"align":["right"]},{"label":["INDIC_NBSALLES"],"name":[46],"type":["chr"],"align":["left"]},{"label":["NBLIEUX"],"name":[47],"type":["dbl"],"align":["right"]},{"label":["INDIC_NBLIEUX"],"name":[48],"type":["chr"],"align":["left"]},{"label":["LAMBERT_X"],"name":[49],"type":["dbl"],"align":["right"]},{"label":["LAMBERT_Y"],"name":[50],"type":["dbl"],"align":["right"]},{"label":["LONGITUDE"],"name":[51],"type":["dbl"],"align":["right"]},{"label":["LATITUDE"],"name":[52],"type":["dbl"],"align":["right"]},{"label":["QUALITE_XY"],"name":[53],"type":["chr"],"align":["left"]},{"label":["EPSG"],"name":[54],"type":["chr"],"align":["left"]},{"label":["QUALITE_GEOLOC"],"name":[55],"type":["chr"],"align":["left"]},{"label":["TR_DIST_PRECISION"],"name":[56],"type":["chr"],"align":["left"]},{"label":["DCIRIS"],"name":[57],"type":["chr"],"align":["left"]},{"label":["QUALI_IRIS"],"name":[58],"type":["chr"],"align":["left"]},{"label":["IRISEE"],"name":[59],"type":["chr"],"align":["left"]},{"label":["QP2015"],"name":[60],"type":["chr"],"align":["left"]},{"label":["QUALI_QP2015"],"name":[61],"type":["chr"],"align":["left"]},{"label":["QP"],"name":[62],"type":["chr"],"align":["left"]},{"label":["QUALI_QP"],"name":[63],"type":["chr"],"align":["left"]},{"label":["QVA"],"name":[64],"type":["chr"],"align":["left"]},{"label":["QUALI_QVA"],"name":[65],"type":["chr"],"align":["left"]},{"label":["ZUS"],"name":[66],"type":["chr"],"align":["left"]},{"label":["QUALI_ZUS"],"name":[67],"type":["chr"],"align":["left"]},{"label":["EPCI"],"name":[68],"type":["chr"],"align":["left"]},{"label":["UU2020"],"name":[69],"type":["chr"],"align":["left"]},{"label":["BV2022"],"name":[70],"type":["chr"],"align":["left"]},{"label":["AAV2020"],"name":[71],"type":["chr"],"align":["left"]},{"label":["DENS3"],"name":[72],"type":["chr"],"align":["left"]},{"label":["DENS7"],"name":[73],"type":["chr"],"align":["left"]},{"label":["LIBCOM"],"name":[74],"type":["chr"],"align":["left"]},{"label":["Libelle_TYPEQU"],"name":[75],"type":["chr"],"align":["left"]}],"data":[{"1":"2023","2":"ECOLE ELEMENTAIRE PRIVEE MONTESSORI 21 AUBERVILLIERS-VI","3":"","4":"2","5":"","6":"RUE","7":"AUVRY","8":"","9":"93300","10":"93001","11":"93","12":"11","13":"C","14":"C1","15":"C108","16":"","17":"_Z","18":"1","19":"_Z","20":"_Z","21":"0","22":"_Z","23":"PR","24":"_Z","25":"_Z","26":"_Z","27":"_Z","28":"_Z","29":"_Z","30":"_Z","31":"_Z","32":"_Z","33":"_Z","34":"_Z","35":"_Z","36":"_Z","37":"_Z","38":"_Z","39":"_Z","40":"_Z","41":"47","42":"1","43":"NA","44":"0","45":"NA","46":"0","47":"NA","48":"0","49":"655319.0","50":"6867133","51":"2.390505","52":"48.90265","53":"B","54":"2154","55":"11","56":"< 100","57":"930010603","58":"1","59":"1","60":"QP093028","61":"1","62":"QN09328M","63":"1","64":"CSZ","65":"_Z","66":"1122020","67":"1","68":"200054781","69":"00851","70":"75056","71":"001","72":"1","73":"1","74":"AUBERVILLIERS","75":"ÉCOLE PRIMAIRE","_rn_":"1"},{"1":"2023","2":"ECOLE ELEMENTAIRE PRIVEE FORT SCHOOL","3":"","4":"115","5":"","6":"RUE","7":"DANIELLE CASANOVA","8":"","9":"93300","10":"93001","11":"93","12":"11","13":"C","14":"C1","15":"C108","16":"","17":"_Z","18":"0","19":"_Z","20":"_Z","21":"0","22":"_Z","23":"PR","24":"_Z","25":"_Z","26":"_Z","27":"_Z","28":"_Z","29":"_Z","30":"_Z","31":"_Z","32":"_Z","33":"_Z","34":"_Z","35":"_Z","36":"_Z","37":"_Z","38":"_Z","39":"_Z","40":"_Z","41":"195","42":"1","43":"NA","44":"0","45":"NA","46":"0","47":"NA","48":"0","49":"655737.7","50":"6868752","51":"2.396047","52":"48.91724","53":"B","54":"2154","55":"11","56":"< 100","57":"930010202","58":"1","59":"1","60":"HZ","61":"1","62":"QN09328M","63":"1","64":"CSZ","65":"_Z","66":"HZ","67":"1","68":"200054781","69":"00851","70":"75056","71":"001","72":"1","73":"1","74":"AUBERVILLIERS","75":"ÉCOLE PRIMAIRE","_rn_":"2"},{"1":"2023","2":"ECOLE PRIMAIRE PRIVEE CHNE OR","3":"","4":"17","5":"","6":"RUE","7":"DU CLOS BENARD","8":"","9":"93300","10":"93001","11":"93","12":"11","13":"C","14":"C1","15":"C108","16":"90750918600017","17":"O","18":"1","19":"_Z","20":"_Z","21":"0","22":"_Z","23":"PR","24":"_Z","25":"_Z","26":"_Z","27":"_Z","28":"_Z","29":"_Z","30":"_Z","31":"_Z","32":"_Z","33":"_Z","34":"_Z","35":"_Z","36":"_Z","37":"_Z","38":"_Z","39":"_Z","40":"_Z","41":"367","42":"1","43":"NA","44":"0","45":"NA","46":"0","47":"NA","48":"0","49":"655029.9","50":"6868085","51":"2.386460","52":"48.91119","53":"B","54":"2154","55":"11","56":"< 100","57":"930010503","58":"1","59":"1","60":"QP093028","61":"1","62":"QN09328M","63":"1","64":"CSZ","65":"_Z","66":"HZ","67":"1","68":"200054781","69":"00851","70":"75056","71":"001","72":"1","73":"1","74":"AUBERVILLIERS","75":"ÉCOLE PRIMAIRE","_rn_":"3"},{"1":"2023","2":"ECOLE PRIMAIRE MALALA YOUSAFZAI","3":"","4":"6","5":"","6":"RUE","7":"HENRI MURGER","8":"","9":"93300","10":"93001","11":"93","12":"11","13":"C","14":"C1","15":"C108","16":"21930001900623","17":"O","18":"1","19":"_Z","20":"_Z","21":"1","22":"_Z","23":"PU","24":"_Z","25":"_Z","26":"_Z","27":"_Z","28":"_Z","29":"_Z","30":"_Z","31":"_Z","32":"_Z","33":"_Z","34":"_Z","35":"_Z","36":"_Z","37":"_Z","38":"_Z","39":"_Z","40":"_Z","41":"170","42":"1","43":"NA","44":"0","45":"NA","46":"0","47":"NA","48":"0","49":"653605.3","50":"6868606","51":"2.366968","52":"48.91577","53":"B","54":"2154","55":"11","56":"< 100","57":"930011102","58":"1","59":"1","60":"QP093028","61":"1","62":"QN09328M","63":"1","64":"CSZ","65":"_Z","66":"1122010","67":"1","68":"200054781","69":"00851","70":"75056","71":"001","72":"1","73":"1","74":"AUBERVILLIERS","75":"ÉCOLE PRIMAIRE","_rn_":"4"},{"1":"2023","2":"ECOLE PRIMAIRE PRIVEE NOTRE DAME DES VERTUS","3":"","4":"11","5":"","6":"RUE","7":"DES NOYERS","8":"","9":"93300","10":"93001","11":"93","12":"11","13":"C","14":"C1","15":"C108","16":"78547578100023","17":"O","18":"1","19":"_Z","20":"_Z","21":"0","22":"_Z","23":"PR","24":"_Z","25":"_Z","26":"_Z","27":"_Z","28":"_Z","29":"_Z","30":"_Z","31":"_Z","32":"_Z","33":"_Z","34":"_Z","35":"_Z","36":"_Z","37":"_Z","38":"_Z","39":"_Z","40":"_Z","41":"338","42":"1","43":"NA","44":"0","45":"NA","46":"0","47":"NA","48":"0","49":"654743.3","50":"6868603","51":"2.382495","52":"48.91583","53":"B","54":"2154","55":"11","56":"< 100","57":"930010903","58":"1","59":"1","60":"QP093028","61":"1","62":"QN09328M","63":"1","64":"CSZ","65":"_Z","66":"HZ","67":"1","68":"200054781","69":"00851","70":"75056","71":"001","72":"1","73":"1","74":"AUBERVILLIERS","75":"ÉCOLE PRIMAIRE","_rn_":"5"},{"1":"2023","2":"ECOLE ELEMENTAIRE PUBLIQUE ROBESPIERRE","3":"","4":"","5":"","6":"RUE","7":"ADRIEN HUZARD","8":"","9":"93300","10":"93001","11":"93","12":"11","13":"C","14":"C1","15":"C109","16":"21930001900151","17":"O","18":"1","19":"_Z","20":"_Z","21":"1","22":"_Z","23":"PU","24":"_Z","25":"_Z","26":"_Z","27":"_Z","28":"_Z","29":"_Z","30":"_Z","31":"_Z","32":"_Z","33":"_Z","34":"_Z","35":"_Z","36":"_Z","37":"_Z","38":"_Z","39":"_Z","40":"_Z","41":"270","42":"1","43":"NA","44":"0","45":"NA","46":"0","47":"NA","48":"0","49":"655350.0","50":"6868950","51":"2.390736","52":"48.91899","53":"A","54":"2154","55":"12","56":"[100 - 500[","57":"930010101","58":"1","59":"1","60":"HZ","61":"1","62":"QN09328M","63":"2","64":"CSZ","65":"_Z","66":"HZ","67":"1","68":"200054781","69":"00851","70":"75056","71":"001","72":"1","73":"1","74":"AUBERVILLIERS","75":"ÉCOLE ÉLÉMENTAIRE","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Nous avons 61 établissements d’enseignement recensés dans Aubervilliers. Transformons en <em>dataframe</em> géographique pour pouvoir les représenter sur une carte:</p>
+<div class="cell">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">etab_enseignement_auber</span> <span class="op">&lt;-</span> <span class="va">etab_enseignement_auber</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LONGITUDE"</span>, <span class="st">"LATITUDE"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bounds</span> <span class="op">&lt;-</span> <span class="va">etab_enseignement_auber</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div id="lst-etab-enseignement" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-etab-enseignement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;8: Les établissements d’enseignement à Aubervilliers
+</figcaption><div aria-describedby="lst-etab-enseignement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="lst-etab-enseignement"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rstudio.github.io/leaflet/reference/leaflet.html">leaflet</a></span><span class="op">(</span><span class="va">etab_enseignement_auber</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/map-layers.html">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/map-layers.html">addMarkers</a></span><span class="op">(</span>popup <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"&lt;b&gt;"</span>, <span class="va">NOMRS</span>, <span class="st">"&lt;/b&gt;&lt;br&gt;"</span>,</span>
+<span>    <span class="st">"&lt;b&gt;Type d'établissement&lt;/b&gt;: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html">tolower</a></span><span class="op">(</span><span class="va">Libelle_TYPEQU</span><span class="op">)</span>, <span class="st">" ("</span>, <span class="va">TYPEQU</span>, <span class="st">")"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rstudio.github.io/leaflet/reference/map-methods.html">fitBounds</a></span><span class="op">(</span><span class="va">bounds</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bounds</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">bounds</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>, <span class="va">bounds</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</figure>
+</div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-ccbce127488e4d81c826" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ccbce127488e4d81c826">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[[48.90264920517345,48.9172380834304,48.91119013662506,48.91577130300706,48.91582634740494,48.91898820594432,48.91898125959744,48.91395189728245,48.91395189728245,48.90942319796245,48.91880793377111,48.91338840683765,48.91733052963489,48.91733052963489,48.90966916962624,48.91537453184136,48.91537453184136,48.90469988976858,48.90475980356411,48.91255401126628,48.90912607084931,48.90918547230871,48.91628931943897,48.90639516468571,48.91838920289717,48.91466004986255,48.91119013662506,48.91197649877899,48.91582634740494,48.91659872444974,48.90788076581635,48.90770881451921,48.91003965573918,48.91119013662506,48.91197649877899,48.91732543457319,48.91398489592497,48.90482938171797,48.91732543457319,48.90610456744579,48.91770875154481,48.91068033191337,48.91064413031681,48.91070122510148,48.91988744862242,48.90382366832495,48.91596631193211,48.90879984791518,48.90942319796245,48.90457934174371,48.90949953351919,48.91880793377111,48.91687672653354,48.90960805836228,48.91809034470623,48.91537453184136,48.91311019101835,48.91255401126628,48.91624649081287,48.91626958881286,48.90842145386156],[2.390504742336188,2.396046823653228,2.386460097915849,2.366968289376531,2.382494846382927,2.390736114631829,2.389371636193214,2.399595629485832,2.399595629485832,2.392852250584053,2.377724864008327,2.378646106960141,2.37894835491383,2.37894835491383,2.382213173981898,2.390501434127382,2.390501434127382,2.389337406926989,2.389358940295731,2.379613463020297,2.389420406027122,2.389765014283128,2.387015365856735,2.393868042426332,2.400707024240009,2.37579751130525,2.386460097915849,2.388467376286236,2.382494846382927,2.386497305746237,2.390543346240073,2.383041358149401,2.371472340545696,2.386460097915849,2.388467376286236,2.38668795796612,2.390034700860292,2.391049172456103,2.38668795796612,2.386618812009749,2.393620692538065,2.379982067236204,2.382968225273912,2.391634401213303,2.390725586105594,2.384833534953827,2.402290295375543,2.387139860574167,2.392852250584053,2.386812218735837,2.38814776108232,2.377724864008327,2.379569981541553,2.381419595072636,2.401782308130247,2.390501434127382,2.398473975406393,2.379613463020297,2.386993492718274,2.386674475987383,2.366642391158649],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["<b>ECOLE ELEMENTAIRE PRIVEE MONTESSORI 21 AUBERVILLIERS-VI<\/b><br><b>Type d'établissement<\/b>: école primaire (C108)","<b>ECOLE ELEMENTAIRE PRIVEE FORT SCHOOL<\/b><br><b>Type d'établissement<\/b>: école primaire (C108)","<b>ECOLE PRIMAIRE PRIVEE CHNE OR<\/b><br><b>Type d'établissement<\/b>: école primaire (C108)","<b>ECOLE PRIMAIRE MALALA YOUSAFZAI<\/b><br><b>Type d'établissement<\/b>: école primaire (C108)","<b>ECOLE PRIMAIRE PRIVEE NOTRE DAME DES VERTUS<\/b><br><b>Type d'établissement<\/b>: école primaire (C108)","<b>ECOLE ELEMENTAIRE PUBLIQUE ROBESPIERRE<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE BABEUF<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE PAUL LANGEVIN<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE JOLIOT-CURIE<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE CHARLOTTE DELBO<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE FRIDA KAHLO<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE VICTOR HUGO<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE EDGAR QUINET<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE ALBERT MATHIEZ<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE FIRMIN GEMIER<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE EUGENE VARLIN<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE JULES VALLES<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE CONDORCET<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE JEAN MACE<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE HONORE DE BALZAC<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE JULES GUESDE<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE JEAN JAURES<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>ECOLE ELEMENTAIRE PUBLIQUE WANGARI MAATHAI<\/b><br><b>Type d'établissement<\/b>: école élémentaire (C109)","<b>COLLEGE PRIVE SAINT JOSEPH<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE GABRIEL PERI<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE ROSA LUXEMBURG<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE PRIVE CHNE OR<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE HENRI WALLON<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE PRIVE NOTRE DAME DES VERTUS<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE DIDEROT<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE JEAN MOULIN<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE GISELE HALIMI<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>COLLEGE MIRIAM MAKEBA<\/b><br><b>Type d'établissement<\/b>: collège (C201)","<b>LYCEE GENERAL PRIVE CHNE OR<\/b><br><b>Type d'établissement<\/b>: lycée d’enseignement général et/ou technologique (C301)","<b>LYCEE GENERAL ET TECHNOLOGIQUE HENRI WALLON<\/b><br><b>Type d'établissement<\/b>: lycée d’enseignement général et/ou technologique (C301)","<b>LYCEE POLYVALENT D'ALEMBERT<\/b><br><b>Type d'établissement<\/b>: lycée d’enseignement général et/ou technologique (C301)","<b>LYCEE GENERAL ET TECHNOLOGIQUE LE CORBUSIER<\/b><br><b>Type d'établissement<\/b>: lycée d’enseignement général et/ou technologique (C301)","<b>LYCEE PROFESSIONNEL JEAN-PIERRE TIMBAUD<\/b><br><b>Type d'établissement<\/b>: lycée d’enseignement professionnel (C302)","<b>SECTION ENSEIGNT PROFESSIONNEL LYCEE ALEMBERT<\/b><br><b>Type d'établissement<\/b>: sep section d’enseignement professionnel (C305)","<b>CTRE FORMATION PROF EDUC ET SO CFPES-CEMEA ILE DE FRANCE<\/b><br><b>Type d'établissement<\/b>: formation santé (C402)","<b>CTRE FORM EDUCAT JEUNES ENFANT CTE ETUDE ET RECH.PETITE ENFAN<\/b><br><b>Type d'établissement<\/b>: formation santé (C402)","<b>ECOLE AIDE SOIGNANTES CENTRE FORMATION LOUISE COUVE<\/b><br><b>Type d'établissement<\/b>: formation santé (C402)","<b>CONSERVATOIRE A RAYONNEMENT RE AUBERVILLIERS - LA COURNEUVE<\/b><br><b>Type d'établissement<\/b>: autre formation post bac non universitaire (C409)","<b>INST.NAT.DU PATRIMOINE ET RESTAURAT. DU PATRIMOINE<\/b><br><b>Type d'établissement<\/b>: autre formation post bac non universitaire (C409)","<b>ECOLE MATERNELLE PUBLIQUE SAINT-JUST<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE FRANCINE FROMOND<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE ANGELA DAVIS<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE ANNE SYLVESTRE<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE TAOS AMROUCHE<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE JACQUES PREVERT<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE PAUL BERT<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE VANDANA SHIVA<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE MARC BLOCH<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE GERARD PHILIPE<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE PIERRE BROSSOLETTE<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE LOUISE MICHEL<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE JEAN PERRIN<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE STENDHAL<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE FRANCOISE DOLTO<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>ECOLE MATERNELLE PUBLIQUE JEAN-JACQUES ROUSSEAU<\/b><br><b>Type d'établissement<\/b>: école maternelle (C107)","<b>AUTRE COMPOSANTE IHEAL - UNIVERSITE SORBONNE NO<\/b><br><b>Type d'établissement<\/b>: autre enseignement supérieur (C509)"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[48.90264920517345,48.91988744862242],"lng":[2.366642391158649,2.402290295375543]},"fitBounds":["48.9026492051734","2.36664239115865","48.9198874486224","2.40229029537554",[]]},"evals":[],"jsHooks":[]}</script>
+</div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -1729,6 +1804,7 @@ Le format <code>GeoParquet</code>
 <ol>
 <li id="fn1"><p>Si vous avez clôné le dépôt disponible sur <a href="https://github.com/linogaliana/parquet-recensement-tutomate"><code>Github</code></a> <i class="fa-brands fa-github" aria-label="github"></i>, un environnement virtuel <code>renv</code> vous permet de recréer la même configuration logicielle que celle utilisée pour générer cette page. Pour cela, il suffit de faire <code><a href="https://rstudio.github.io/renv/reference/restore.html">renv::restore()</a></code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Pour en savoir plus sur ce projet, se rendre sur la <a href="https://inseefrlab.github.io/cartiflette-website/">documentation</a> du projet.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Ce filtre est construit après lecture du dictionnaire des variables de la BPE.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol></section></div></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
