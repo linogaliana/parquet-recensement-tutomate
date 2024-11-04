@@ -1,6 +1,9 @@
 [
   {
     "listing": "/index.html",
-    "items": []
+    "items": [
+      "/slides/index.html",
+      "/tuto/r.html"
+    ]
   }
 ]
