@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lino Galiana">
+<meta name="description" content="Tutoriel Python">
+
+<title>Utilisation du format Parquet avec Python illustré à partir de quelques exemples – Atelier tutomate sur le format `Parquet`</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../custom.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Atelier tutomate sur le format <code>Parquet</code></span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../slides/index.html"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../tuto/r.html"> 
+<span class="menu-text">Tutoriel R</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../tuto/python.html" aria-current="page"> 
+<span class="menu-text">Tutoriel Python</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#librairies-utilisées" id="toc-librairies-utilisées" class="nav-link active" data-scroll-target="#librairies-utilisées">Librairies utilisées</a></li>
+  <li><a href="#téléchargement-des-fichiers" id="toc-téléchargement-des-fichiers" class="nav-link" data-scroll-target="#téléchargement-des-fichiers">Téléchargement des fichiers</a></li>
+  <li><a href="#création-de-la-base-de-données" id="toc-création-de-la-base-de-données" class="nav-link" data-scroll-target="#création-de-la-base-de-données">Création de la base de données</a></li>
+  <li><a href="#ouvrir-un-fichier-parquet" id="toc-ouvrir-un-fichier-parquet" class="nav-link" data-scroll-target="#ouvrir-un-fichier-parquet">Ouvrir un fichier <code>Parquet</code></a>
+  <ul class="collapse">
+  <li><a href="#requêtes-sur-les-colonnes-select" id="toc-requêtes-sur-les-colonnes-select" class="nav-link" data-scroll-target="#requêtes-sur-les-colonnes-select">Requêtes sur les colonnes (<code>SELECT</code>)</a></li>
+  <li><a href="#requêtes-sur-les-lignes-where" id="toc-requêtes-sur-les-lignes-where" class="nav-link" data-scroll-target="#requêtes-sur-les-lignes-where">Requêtes sur les lignes (<code>WHERE</code>)</a></li>
+  </ul></li>
+  <li><a href="#statistiques-agrégées" id="toc-statistiques-agrégées" class="nav-link" data-scroll-target="#statistiques-agrégées">Statistiques agrégées</a>
+  <ul class="collapse">
+  <li><a href="#exemples-sans-groupes" id="toc-exemples-sans-groupes" class="nav-link" data-scroll-target="#exemples-sans-groupes">Exemples sans groupes</a></li>
+  <li><a href="#statistiques-par-groupe" id="toc-statistiques-par-groupe" class="nav-link" data-scroll-target="#statistiques-par-groupe">Statistiques par groupe</a>
+  <ul class="collapse">
+  <li><a href="#exemple-1-pyramide-des-âges-dans-laude-lhérault-et-le-gard" id="toc-exemple-1-pyramide-des-âges-dans-laude-lhérault-et-le-gard" class="nav-link" data-scroll-target="#exemple-1-pyramide-des-âges-dans-laude-lhérault-et-le-gard">Exemple 1: pyramide des âges dans l’Aude, l’Hérault et le Gard</a></li>
+  <li><a href="#exemple-2-répartition-des-plus-de-60-ans-par-département" id="toc-exemple-2-répartition-des-plus-de-60-ans-par-département" class="nav-link" data-scroll-target="#exemple-2-répartition-des-plus-de-60-ans-par-département">Exemple 2: répartition des plus de 60 ans par département</a></li>
+  <li><a href="#exemple-3-part-des-résidences-secondaires-et-des-logements-vacants" id="toc-exemple-3-part-des-résidences-secondaires-et-des-logements-vacants" class="nav-link" data-scroll-target="#exemple-3-part-des-résidences-secondaires-et-des-logements-vacants">Exemple 3: part des résidences secondaires et des logements vacants</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Utilisation du format <code>Parquet</code> avec <code>Python</code> illustré à partir de quelques exemples</h1>
+</div>
+
+<div>
+  <div class="description">
+    Tutoriel <code>Python</code>
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Lino Galiana </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Ce tutoriel vise à offrir une approche complémentaire au guide d’utilisation des données du recensement au format <code>Parquet</code> publié sur <a href="https://ssphub.netlify.app/post/parquetrp/">https://ssphub.netlify.app</a> pour accompagner la diffusion de celles-ci par l’Insee.</p>
+<p>Il s’agit d’un tutoriel préparé pour l’atelier <a href="https://mate-shs.cnrs.fr/actions/tutomate/tuto62_parquet_galiana/"><code>tuto@mate</code></a> à l’EHESS le 5 novembre 2024. Ce tutoriel est exclusivement en <code>R</code>. Les slides de la présentation sont disponibles ci-dessous:</p>
+<details>
+<summary>
+<p>Dérouler les <em>slides</em> ci-dessous ou <a href="https://inseefrlab.github.io/formation-bonnes-pratiques-git-R/slides/complete.html#/partie-1-contr%C3%B4le-de-version-avec-git">cliquer ici</a> pour afficher les slides en plein écran.</p>
+</summary>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><iframe class="sourceCode yaml code-with-copy" src="https://inseefrlab.github.io/formation-bonnes-pratiques-git-R/slides/complete.html#/partie-1-contr%C3%B4le-de-version-avec-git"></iframe></div>
+</details>
+<p>Il propose des exemples variés pour illustrer la simplicité d’usage du format <code>Parquet</code>. Parmi ceux-ci, à partir du recensement de la population:</p>
+<ul>
+<li>Liste des exemples à venir</li>
+</ul>
+<section id="librairies-utilisées" class="level1">
+<h1>Librairies utilisées</h1>
+<p>Ce tutoriel utilisera plusieurs librairies <code>Python</code>. Celles-ci peuvent être importées ainsi</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="téléchargement-des-fichiers" class="level1">
+<h1>Téléchargement des fichiers</h1>
+<p>Pour commencer, nous allons télécharger les fichiers depuis internet pour limiter les échanges réseaux. Comme nous le verrons ultérieurement, ce n’est en fait pas indispensable car <code>duckdb</code> optimise les données téléchargées à chaque requête.</p>
+<div id="96c030d4" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Voir le code pour télécharger les données</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> download_file(url: <span class="bu">str</span>, filename: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Envoyer une requête GET à l'URL</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> requests.get(url, stream<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Vérifier si la requête a réussi</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        response.raise_for_status()</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Récupérer la taille totale du fichier depuis les headers (si disponible)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        total_size <span class="op">=</span> <span class="bu">int</span>(response.headers.get(<span class="st">'content-length'</span>, <span class="dv">0</span>))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        block_size <span class="op">=</span> <span class="dv">1024</span>  <span class="co"># 1 Kilobyte</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Afficher un message si le content-length n'est pas disponible</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> total_size <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Impossible de déterminer la taille du fichier </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">, téléchargement sans barre de progression."</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Configuration de la barre de progression</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        progress_bar <span class="op">=</span> tqdm(total<span class="op">=</span>total_size, unit<span class="op">=</span><span class="st">'iB'</span>, unit_scale<span class="op">=</span><span class="va">True</span>, desc<span class="op">=</span>filename) <span class="cf">if</span> total_size <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Écrire le contenu dans le fichier</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="bu">open</span>(filename, <span class="st">'wb'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> chunk <span class="kw">in</span> response.iter_content(chunk_size<span class="op">=</span>block_size):</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> progress_bar:</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                    progress_bar.update(<span class="bu">len</span>(chunk))</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                <span class="bu">file</span>.write(chunk)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> progress_bar:</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>            progress_bar.close()</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Fichier téléchargé avec succès: </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> requests.exceptions.RequestException <span class="im">as</span> e:</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Le téléchargement a échoué: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>filename_table_logement <span class="op">=</span> <span class="st">"RPlogement.parquet"</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>filename_table_individu <span class="op">=</span> <span class="st">"RPindividus.parquet"</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>files_to_download <span class="op">=</span> {</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"logements"</span>: {<span class="st">"url"</span>: <span class="st">"https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-logements-ordinaires-en-2020-1/20231023-123618/fd-logemt-2020.parquet"</span>, <span class="st">"filename"</span>: filename_table_logement},</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"individus"</span>: {<span class="st">"url"</span>: <span class="st">"https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-individus-localises-au-canton-ou-ville-2020-1/20231023-122841/fd-indcvi-2020.parquet"</span>, <span class="st">"filename"</span>: filename_table_individu},</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"documentation_logement"</span>: {<span class="st">"url"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/c274705f-98db-4d9b-9674-578e04f03198"</span>, <span class="st">"filename"</span>: <span class="st">"RPindividus_doc.csv"</span>},</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"documentation_individus"</span>: {<span class="st">"url"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/1c6c6ab2-b766-41a4-90f0-043173d5e9d1"</span>, <span class="st">"filename"</span>: <span class="st">"RPlogement_doc.csv"</span>},</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"table_bpe"</span>: {<span class="st">"url"</span>: <span class="st">"https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"</span>, <span class="st">"filename"</span>: <span class="st">"BPE_2023.parquet"</span>}</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Boucle pour télécharger les fichiers avec des noms personnalisés (s'ils ne sont pas déjà enregistrés)</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, file_info <span class="kw">in</span> files_to_download.items():</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> file_info[<span class="st">"url"</span>]</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> file_info[<span class="st">"filename"</span>]</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Débogage : vérifier si le fichier existe déjà</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> os.path.exists(filename):</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Le fichier </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss"> existe déjà, pas de téléchargement."</span>)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Téléchargement de </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        download_file(url, filename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Nous aurons également besoin pour quelques illustrations d’un fond de carte des départements. Celui-ci peut être simplement récupéré grâce au <em>package</em> <code>cartiflette</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div id="b3084d13" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Voir le code pour récupérer ce fond de carte</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>departements <span class="op">=</span> carti_download(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  values<span class="op">=</span><span class="st">"France"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  crs<span class="op">=</span><span class="dv">4326</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  borders<span class="op">=</span><span class="st">"DEPARTEMENT"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  vectorfile_format<span class="op">=</span><span class="st">"geojson"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  filter_by<span class="op">=</span><span class="st">"FRANCE_ENTIERE_DROM_RAPPROCHES"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  source<span class="op">=</span><span class="st">"EXPRESS-COG-CARTO-TERRITOIRE"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  year<span class="op">=</span><span class="dv">2022</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="2d3ab02c" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  ggplot(departements) <span class="op">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  geom_map() <span class="op">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  theme_void()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="python_files/figure-html/cell-4-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="création-de-la-base-de-données" class="level1">
+<h1>Création de la base de données</h1>
+<p>En principe, <code>duckdb</code> fonctionne à la manière d’une base de données. Autrement dit, on définit une base de données et effectue des requêtes (SQL ou verbes <code>tidyverse</code>) dessus. Pour créer une base de données, il suffit de faire un <code>read_parquet</code> avec le chemin du fichier.</p>
+<p>La base de données se crée tout simplement de la manière suivante:</p>
+<div id="b3c7cf22" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ss">  FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ch">\"</span><span class="ss">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ss">  SELECT *</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ss">  LIMIT 5</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">COMMUNE</th>
+<th data-quarto-table-cell-role="th">ARM</th>
+<th data-quarto-table-cell-role="th">IRIS</th>
+<th data-quarto-table-cell-role="th">ACHL</th>
+<th data-quarto-table-cell-role="th">AEMM</th>
+<th data-quarto-table-cell-role="th">AEMMR</th>
+<th data-quarto-table-cell-role="th">AGEMEN8</th>
+<th data-quarto-table-cell-role="th">ANEM</th>
+<th data-quarto-table-cell-role="th">ANEMR</th>
+<th data-quarto-table-cell-role="th">ASCEN</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">STOCD</th>
+<th data-quarto-table-cell-role="th">SURF</th>
+<th data-quarto-table-cell-role="th">TACTM</th>
+<th data-quarto-table-cell-role="th">TPM</th>
+<th data-quarto-table-cell-role="th">TRANSM</th>
+<th data-quarto-table-cell-role="th">TRIRIS</th>
+<th data-quarto-table-cell-role="th">TYPC</th>
+<th data-quarto-table-cell-role="th">TYPL</th>
+<th data-quarto-table-cell-role="th">VOIT</th>
+<th data-quarto-table-cell-role="th">WC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>01001</td>
+<td>ZZZZZ</td>
+<td>ZZZZZZZZZ</td>
+<td>A11</td>
+<td>1993</td>
+<td>8</td>
+<td>65</td>
+<td>29</td>
+<td>4</td>
+<td>2</td>
+<td>...</td>
+<td>10</td>
+<td>6</td>
+<td>21</td>
+<td>Z</td>
+<td>Z</td>
+<td>ZZZZZZ</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>01001</td>
+<td>ZZZZZ</td>
+<td>ZZZZZZZZZ</td>
+<td>C113</td>
+<td>2013</td>
+<td>9</td>
+<td>40</td>
+<td>9</td>
+<td>2</td>
+<td>2</td>
+<td>...</td>
+<td>10</td>
+<td>6</td>
+<td>11</td>
+<td>1</td>
+<td>5</td>
+<td>ZZZZZZ</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>Z</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>01001</td>
+<td>ZZZZZ</td>
+<td>ZZZZZZZZZ</td>
+<td>C113</td>
+<td>2013</td>
+<td>9</td>
+<td>65</td>
+<td>9</td>
+<td>2</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>4</td>
+<td>21</td>
+<td>Z</td>
+<td>Z</td>
+<td>ZZZZZZ</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>01001</td>
+<td>ZZZZZ</td>
+<td>ZZZZZZZZZ</td>
+<td>A12</td>
+<td>1994</td>
+<td>8</td>
+<td>65</td>
+<td>28</td>
+<td>4</td>
+<td>2</td>
+<td>...</td>
+<td>10</td>
+<td>7</td>
+<td>21</td>
+<td>Z</td>
+<td>Z</td>
+<td>ZZZZZZ</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>Z</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>01001</td>
+<td>ZZZZZ</td>
+<td>ZZZZZZZZZ</td>
+<td>C115</td>
+<td>0</td>
+<td>0</td>
+<td>YY</td>
+<td>999</td>
+<td>99</td>
+<td>Y</td>
+<td>...</td>
+<td>0</td>
+<td>Y</td>
+<td>YY</td>
+<td>Y</td>
+<td>Y</td>
+<td>ZZZZZZ</td>
+<td>Y</td>
+<td>6</td>
+<td>X</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 69 columns</p>
+</div>
+</div>
+</div>
+<p>La chaîne d’exécution ressemble ainsi à celle-ci:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../img/duckdb-delegation1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>Les calculs ont lieu dans <code>duckdb</code> et le résultat est transformé en <em>DataFrame</em> <code>Pandas</code> avec la méthode <code>to_df</code>.</p>
+<p>Le fait de passer par l’intermédiaire de <code>duckdb</code> et un fichier <code>Parquet</code> permet d’optimiser les besoins mémoire de <code>Python</code>. En effet, il n’est pas nécessaire d’ouvrir un fichier dans son ensemble, le transformer en objet <code>Python</code> pour n’utiliser qu’une partie des données. Nous verrons ultérieurement la manière dont les besoins mémoires sont minimisés grâce au combo <code>duckdb</code> &amp; <code>Parquet</code>.</p>
+<p>Enfin, nous pouvons importer les dictionnaires des variables qui pourront nous servir ultérieurement:</p>
+<div id="7fb0846d" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>documentation_logement <span class="op">=</span> pd.read_csv(<span class="st">"RPlogement_doc.csv"</span>, sep <span class="op">=</span> <span class="st">";"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>documentation_individus <span class="op">=</span> pd.read_csv(<span class="st">"RPindividus_doc.csv"</span>, sep <span class="op">=</span> <span class="st">";"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ouvrir-un-fichier-parquet" class="level1">
+<h1>Ouvrir un fichier <code>Parquet</code></h1>
+<section id="requêtes-sur-les-colonnes-select" class="level2">
+<h2 class="anchored" data-anchor-id="requêtes-sur-les-colonnes-select">Requêtes sur les colonnes (<code>SELECT</code>)</h2>
+<p>L’une des forces du format <code>Parquet</code> est de simplifier l’import de fichiers volumineux qui ne comportent que quelques colonnes nous intéressant. Par exemple, la table des individus comporte 88 colonnes, il est peu probable qu’une seule analyse s’intéresse à toutes celles-ci (ou elle risque d’être fort indigeste).</p>
+<p><img src="../img/parquet-table2-enriched.png" class="img-fluid"></p>
+<p>Comme cela est illustré dans <a href="#tip-optimisation-duckdb" class="quarto-xref">Tip&nbsp;1</a>, la différence de volumétrie entre un fichier non filtré et un fichier filtré est importante.</p>
+<div id="87a1c0ea" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ch">\"</span><span class="ss">) "</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SELECT IPONDI AS poids, AGED, VOIT "</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LIMIT 10"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>duckdb.sql(query).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">poids</th>
+<th data-quarto-table-cell-role="th">AGED</th>
+<th data-quarto-table-cell-role="th">VOIT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.865066</td>
+<td>74</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>4.987931</td>
+<td>39</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>4.987931</td>
+<td>9</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>5.013547</td>
+<td>55</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>3.478368</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>3.478368</td>
+<td>43</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>3.478368</td>
+<td>38</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>1.003585</td>
+<td>46</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>1.003585</td>
+<td>16</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.984087</td>
+<td>59</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="tip-optimisation-duckdb" class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip&nbsp;1: Comprendre l’optimisation permise par <code>Parquet</code> et <code>DuckDB</code>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Pour réduire la volumétrie des données importées, il est possible de mettre en oeuvre deux stratégies:</p>
+<ul>
+<li>N’importer qu’un nombre limité de colonnes</li>
+<li>N’importer qu’un nombre limité de lignes</li>
+</ul>
+<p>Comme cela a été évoqué dans les <em>slides</em>, le format <code>Parquet</code> est particulièrement optimisé pour le premier besoin. C’est donc généralement la première optimisation mise en oeuvre. Pour s’en convaincre on peut regarder la taille des données importées dans deux cas:</p>
+<ul>
+<li>On utilise beaucoup de lignes mais peu de colonnes</li>
+<li>On utilise beaucoup de colonnes mais peu de lignes</li>
+</ul>
+<p>Pour cela, nous utilisons la fonction SQL <code>EXPLAIN ANALYZE</code> disponible dans <code>duckdb</code>. Elle décompose le plan d’exécution de <code>duckdb</code>, ce qui nous permettra de comprendre la stratégie d’optimisation. Elle permet aussi de connaître le volume de données importées lorsqu’on récupère un fichier d’internet. En effet, <code>duckdb</code> est malin: plutôt que de télécharger un fichier entier pour n’en lire qu’une partie, la librairie est capable de n’importer que les blocs du fichier qui l’intéresse.</p>
+<p>Ceci nécessite l’utilisation de l’extension <code>httpfs</code> (un peu l’équivalent des <code>library</code> de <code>R</code> en <code>duckdb</code>). Elle s’installe et s’utilise de la manière suivante</p>
+<div id="21109248" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"INSTALL httpfs; LOAD httpfs;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Demandons à <code>DuckDB</code> d’exécuter la requête <em>“beaucoup de colonnes, pas beaucoup de lignes”</em> et regardons le plan d’exécution et les informations données par <code>DuckDB</code>:</p>
+<details>
+<summary>
+Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
+</summary>
+<div id="eacf5603" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>url_table_logement <span class="op">=</span> files_to_download.get(<span class="st">"logements"</span>).get(<span class="st">"url"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>url_table_individu <span class="op">=</span> files_to_download.get(<span class="st">"individus"</span>).get(<span class="st">"url"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plan <span class="op">=</span> duckdb.query(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ss">f"""</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ss">EXPLAIN ANALYZE</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet("</span><span class="sc">{</span>url_table_logement<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT *</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="ss">LIMIT 5</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="3537821e" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  plan.to_df()[<span class="st">'explain_value'</span>].iloc[<span class="dv">0</span>]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+ EXPLAIN ANALYZE FROM read_parquet("https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-logements-ordinaires-en-2020-1/20231023-123618/fd-logemt-2020.parquet") SELECT * LIMIT 5 
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││         HTTPFS HTTP Stats         ││
+││                                   ││
+││            in: 19.4 MiB           ││
+││            out: 0 bytes           ││
+││              #HEAD: 1             ││
+││              #GET: 3              ││
+││              #PUT: 0              ││
+││              #POST: 0             ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││               Total Time: 1.84s              ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│           0 Rows          │
+│          (0.00s)          │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      STREAMING_LIMIT      │
+│    ────────────────────   │
+│           5 Rows          │
+│          (0.00s)          │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         TABLE_SCAN        │
+│    ────────────────────   │
+│         Function:         │
+│        READ_PARQUET       │
+│                           │
+│        Projections:       │
+│          COMMUNE          │
+│            ARM            │
+│            IRIS           │
+│            ACHL           │
+│            AEMM           │
+│           AEMMR           │
+│          AGEMEN8          │
+│            ANEM           │
+│           ANEMR           │
+│           ASCEN           │
+│            BAIN           │
+│            BATI           │
+│          CATIRIS          │
+│            CATL           │
+│            CHAU           │
+│            CHFL           │
+│            CHOS           │
+│            CLIM           │
+│            CMBL           │
+│            CUIS           │
+│           DEROU           │
+│           DIPLM           │
+│            EAU            │
+│           EGOUL           │
+│            ELEC           │
+└───────────────────────────┘
+</code></pre>
+</div>
+</div>
+</details>
+<details>
+<summary>
+Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
+</summary>
+<div id="c1974ce0" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plan <span class="op">=</span> duckdb.sql(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  EXPLAIN ANALYZE</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ss">  SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("</span><span class="sc">{</span>url_table_individu<span class="sc">}</span><span class="ss">") LIMIT 10000</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b3048283" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  plan.to_df()[<span class="st">'explain_value'</span>].iloc[<span class="dv">0</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││    Query Profiling Information    ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+   EXPLAIN ANALYZE   SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-individus-localises-au-canton-ou-ville-2020-1/20231023-122841/fd-indcvi-2020.parquet") LIMIT 10000   
+┌─────────────────────────────────────┐
+│┌───────────────────────────────────┐│
+││         HTTPFS HTTP Stats         ││
+││                                   ││
+││            in: 2.8 MiB            ││
+││            out: 0 bytes           ││
+││              #HEAD: 1             ││
+││              #GET: 5              ││
+││              #PUT: 0              ││
+││              #POST: 0             ││
+│└───────────────────────────────────┘│
+└─────────────────────────────────────┘
+┌────────────────────────────────────────────────┐
+│┌──────────────────────────────────────────────┐│
+││               Total Time: 1.33s              ││
+│└──────────────────────────────────────────────┘│
+└────────────────────────────────────────────────┘
+┌───────────────────────────┐
+│           QUERY           │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      EXPLAIN_ANALYZE      │
+│    ────────────────────   │
+│           0 Rows          │
+│          (0.00s)          │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│      STREAMING_LIMIT      │
+│    ────────────────────   │
+│         10000 Rows        │
+│          (0.00s)          │
+└─────────────┬─────────────┘
+┌─────────────┴─────────────┐
+│         TABLE_SCAN        │
+│    ────────────────────   │
+│         Function:         │
+│        READ_PARQUET       │
+│                           │
+│        Projections:       │
+│           IPONDI          │
+│            AGED           │
+│            VOIT           │
+│                           │
+│         12288 Rows        │
+│          (1.33s)          │
+└───────────────────────────┘
+</code></pre>
+</div>
+</div>
+</details>
+<p>La comparaison de ces plans d’exécution montre l’intérêt de faire un filtre sur les colonnes : les besoins computationnels sont drastiquement diminués. Le filtre sur les lignes n’arrive que dans un second temps, une fois les colonnes sélectionnées.</p>
+<p>Pourquoi seulement un rapport de 1 à 4 entre le poids des deux fichiers ? C’est parce que nos requêtes comportent toute deux la variable <code>IPONDI</code> (les poids à utiliser pour extrapoler l’échantillon à la population) qui est à haute précision là où beaucoup d’autres colonnes comportent un nombre réduit de modalités et sont donc peu volumineuses.</p>
+</div>
+</div>
+</div>
+<p>DuckDB propose également des fonctionnalités pour extraire des colonnes à travers des <a href="https://fr.wikipedia.org/wiki/Expression_r%C3%A9guli%C3%A8re">expressions régulières</a>. Cette approche est également possible avec le <code>tidyverse</code></p>
+<div id="da18898d" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ch">\"</span><span class="ss">)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT IPONDI AS poids, COLUMNS('.*AGE.*')</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">poids</th>
+<th data-quarto-table-cell-role="th">AGED</th>
+<th data-quarto-table-cell-role="th">AGER20</th>
+<th data-quarto-table-cell-role="th">AGEREV</th>
+<th data-quarto-table-cell-role="th">AGEREVQ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.865066</td>
+<td>74</td>
+<td>79</td>
+<td>73</td>
+<td>70</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>4.987931</td>
+<td>39</td>
+<td>39</td>
+<td>38</td>
+<td>35</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>4.987931</td>
+<td>9</td>
+<td>10</td>
+<td>8</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>5.013547</td>
+<td>55</td>
+<td>54</td>
+<td>54</td>
+<td>50</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>3.478368</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>3.478368</td>
+<td>43</td>
+<td>54</td>
+<td>42</td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>3.478368</td>
+<td>38</td>
+<td>39</td>
+<td>37</td>
+<td>35</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>1.003585</td>
+<td>46</td>
+<td>54</td>
+<td>45</td>
+<td>45</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>1.003585</td>
+<td>16</td>
+<td>17</td>
+<td>15</td>
+<td>15</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>0.984087</td>
+<td>59</td>
+<td>64</td>
+<td>58</td>
+<td>55</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="requêtes-sur-les-lignes-where" class="level2">
+<h2 class="anchored" data-anchor-id="requêtes-sur-les-lignes-where">Requêtes sur les lignes (<code>WHERE</code>)</h2>
+<div id="a1652b13" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT IPONDI, AGED, DEPT</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    WHERE DEPT IN ('11', '31', '34')</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">IPONDI</th>
+<th data-quarto-table-cell-role="th">AGED</th>
+<th data-quarto-table-cell-role="th">DEPT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>5.027778</td>
+<td>59</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>5.027778</td>
+<td>83</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>4.996593</td>
+<td>50</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4.996593</td>
+<td>26</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5.148676</td>
+<td>9</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>5.148676</td>
+<td>38</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>5.148676</td>
+<td>49</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>5.000000</td>
+<td>88</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>5.000000</td>
+<td>88</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>5.297153</td>
+<td>18</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Les filtres sur les observations peuvent être faits à partir de critères sur plusieurs colonnes. Par exemple, pour ne conserver que les observations de la ville de Nice où la date d’emménagement est postérieure à 2020, la requête suivante peut être utilisée :</p>
+<div id="f9d4682d" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT *</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    WHERE COMMUNE = '06088' AND AEMM &gt; 2020</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">COMMUNE</th>
+<th data-quarto-table-cell-role="th">ARM</th>
+<th data-quarto-table-cell-role="th">IRIS</th>
+<th data-quarto-table-cell-role="th">ACHL</th>
+<th data-quarto-table-cell-role="th">AEMM</th>
+<th data-quarto-table-cell-role="th">AEMMR</th>
+<th data-quarto-table-cell-role="th">AGEMEN8</th>
+<th data-quarto-table-cell-role="th">ANEM</th>
+<th data-quarto-table-cell-role="th">ANEMR</th>
+<th data-quarto-table-cell-role="th">ASCEN</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">STOCD</th>
+<th data-quarto-table-cell-role="th">SURF</th>
+<th data-quarto-table-cell-role="th">TACTM</th>
+<th data-quarto-table-cell-role="th">TPM</th>
+<th data-quarto-table-cell-role="th">TRANSM</th>
+<th data-quarto-table-cell-role="th">TRIRIS</th>
+<th data-quarto-table-cell-role="th">TYPC</th>
+<th data-quarto-table-cell-role="th">TYPL</th>
+<th data-quarto-table-cell-role="th">VOIT</th>
+<th data-quarto-table-cell-role="th">WC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2022</td>
+<td>9</td>
+<td>40</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>4</td>
+<td>11</td>
+<td>1</td>
+<td>5</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>40</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>10</td>
+<td>2</td>
+<td>11</td>
+<td>1</td>
+<td>6</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A12</td>
+<td>2021</td>
+<td>9</td>
+<td>25</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>2</td>
+<td>12</td>
+<td>Z</td>
+<td>Z</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>40</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>3</td>
+<td>11</td>
+<td>1</td>
+<td>5</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>Z</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>40</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>3</td>
+<td>11</td>
+<td>1</td>
+<td>5</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>40</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>2</td>
+<td>11</td>
+<td>1</td>
+<td>2</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>25</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>2</td>
+<td>11</td>
+<td>1</td>
+<td>2</td>
+<td>060421</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>40</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>2</td>
+<td>11</td>
+<td>1</td>
+<td>2</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>25</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>5</td>
+<td>11</td>
+<td>1</td>
+<td>6</td>
+<td>060421</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>Z</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>06088</td>
+<td>ZZZZZ</td>
+<td>060880101</td>
+<td>A11</td>
+<td>2021</td>
+<td>9</td>
+<td>55</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>...</td>
+<td>21</td>
+<td>3</td>
+<td>12</td>
+<td>Z</td>
+<td>Z</td>
+<td>060421</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>Z</td>
+</tr>
+</tbody>
+</table>
+
+<p>10 rows × 69 columns</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="statistiques-agrégées" class="level1">
+<h1>Statistiques agrégées</h1>
+<section id="exemples-sans-groupes" class="level2">
+<h2 class="anchored" data-anchor-id="exemples-sans-groupes">Exemples sans groupes</h2>
+<p>La fonction <code>DISTINCT</code> appliquée à la variable <code>ARM</code> permet d’extraire la liste des codes arrondissements présents dans la base de données.</p>
+<div id="dd7c0a22" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet('</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">')</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT DISTINCT ARM</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ss">WHERE NOT ARM LIKE '%ZZZZZ%'</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ss">ORDER BY ARM</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="st">", "</span>.join(duckdb.sql(query).to_df()[<span class="st">"ARM"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Il est possible d’extraire des statistiques beaucoup plus raffinées par le biais d’une requête SQL plus complexe. Par exemple pour calculer le nombre d’habitants de Toulouse qui ont changé de logement en un an:</p>
+<div id="3c184feb" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT CAST(SUM(IPONDL * CAST(INPER AS INT)) AS INT) </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ss">AS habitants_toulouse_demenagement</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ss">WHERE COMMUNE = '31555' </span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ss">AND IRANM NOT IN ('1', 'Z') </span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ss">AND INPER != 'Y'</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>duckdb.sql(query).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">habitants_toulouse_demenagement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>86364</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="statistiques-par-groupe" class="level2">
+<h2 class="anchored" data-anchor-id="statistiques-par-groupe">Statistiques par groupe</h2>
+<p><code>SQL</code> et <code>dplyr</code> permettent d’aller loin dans la finesse des statistiques descriptives mises en oeuvre. Cela sera illustré à l’aide de plusieurs exemples réflétant des statistiques pouvant être construites grâce à ces données détaillées.</p>
+<section id="exemple-1-pyramide-des-âges-dans-laude-lhérault-et-le-gard" class="level3">
+<h3 class="anchored" data-anchor-id="exemple-1-pyramide-des-âges-dans-laude-lhérault-et-le-gard">Exemple 1: pyramide des âges dans l’Aude, l’Hérault et le Gard</h3>
+<p>Le premier exemple est un comptage sur trois départements. Il illustre la démarche suivante:</p>
+<ol type="1">
+<li>On se restreint aux observations d’intérêt (ici 3 départements)</li>
+<li>On applique la fonction <code>summarise</code> pour calculer une statistique par groupe, en l’occurrence la somme des pondérations</li>
+<li>On retravaille les données</li>
+</ol>
+<p>Ensuite, une fois que nos données sont récupérées dans <code>R</code>, on peut faire la figure avec <code>ggplot</code></p>
+<div id="64fb6c76" class="cell" data-execution_count="17">
+<div id="lst-sud-pyramide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-sud-pyramide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
+</figcaption>
+<div aria-describedby="lst-sud-pyramide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode cell-code" id="lst-sud-pyramide"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="lst-sud-pyramide-1"><a href="#lst-sud-pyramide-1" aria-hidden="true" tabindex="-1"></a>pyramide_ages <span class="op">=</span> duckdb.sql(</span>
+<span id="lst-sud-pyramide-2"><a href="#lst-sud-pyramide-2" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"""</span></span>
+<span id="lst-sud-pyramide-3"><a href="#lst-sud-pyramide-3" aria-hidden="true" tabindex="-1"></a><span class="ss">        FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
+<span id="lst-sud-pyramide-4"><a href="#lst-sud-pyramide-4" aria-hidden="true" tabindex="-1"></a><span class="ss">        SELECT AGED, DEPT AS departement, SUM(IPONDI) AS individus</span></span>
+<span id="lst-sud-pyramide-5"><a href="#lst-sud-pyramide-5" aria-hidden="true" tabindex="-1"></a><span class="ss">        WHERE DEPT IN ('11', '31', '34')</span></span>
+<span id="lst-sud-pyramide-6"><a href="#lst-sud-pyramide-6" aria-hidden="true" tabindex="-1"></a><span class="ss">        GROUP BY AGED, DEPT</span></span>
+<span id="lst-sud-pyramide-7"><a href="#lst-sud-pyramide-7" aria-hidden="true" tabindex="-1"></a><span class="ss">        ORDER BY DEPT, AGED</span></span>
+<span id="lst-sud-pyramide-8"><a href="#lst-sud-pyramide-8" aria-hidden="true" tabindex="-1"></a><span class="ss">        """</span></span>
+<span id="lst-sud-pyramide-9"><a href="#lst-sud-pyramide-9" aria-hidden="true" tabindex="-1"></a>    ).to_df()</span>
+<span id="lst-sud-pyramide-10"><a href="#lst-sud-pyramide-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-sud-pyramide-11"><a href="#lst-sud-pyramide-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="lst-sud-pyramide-12"><a href="#lst-sud-pyramide-12" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> (</span>
+<span id="lst-sud-pyramide-13"><a href="#lst-sud-pyramide-13" aria-hidden="true" tabindex="-1"></a>    ggplot(pyramide_ages, aes(x<span class="op">=</span><span class="st">'AGED'</span>, y<span class="op">=</span><span class="st">'individus'</span>))</span>
+<span id="lst-sud-pyramide-14"><a href="#lst-sud-pyramide-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span><span class="st">'departement'</span>), stat<span class="op">=</span><span class="st">"identity"</span>)</span>
+<span id="lst-sud-pyramide-15"><a href="#lst-sud-pyramide-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_vline(xintercept<span class="op">=</span><span class="dv">18</span>, color<span class="op">=</span><span class="st">"grey"</span>, linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="lst-sud-pyramide-16"><a href="#lst-sud-pyramide-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_wrap(<span class="st">'~departement'</span>, scales<span class="op">=</span><span class="st">"free_y"</span>, nrow<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="lst-sud-pyramide-17"><a href="#lst-sud-pyramide-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_minimal()</span>
+<span id="lst-sud-pyramide-18"><a href="#lst-sud-pyramide-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(y<span class="op">=</span><span class="st">"Individus recensés"</span>, x<span class="op">=</span><span class="st">"Âge"</span>)</span>
+<span id="lst-sud-pyramide-19"><a href="#lst-sud-pyramide-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="lst-sud-pyramide-20"><a href="#lst-sud-pyramide-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst-sud-pyramide-21"><a href="#lst-sud-pyramide-21" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</figure>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="python_files/figure-html/cell-18-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exemple-2-répartition-des-plus-de-60-ans-par-département" class="level3">
+<h3 class="anchored" data-anchor-id="exemple-2-répartition-des-plus-de-60-ans-par-département">Exemple 2: répartition des plus de 60 ans par département</h3>
+<p>L’objectif de ce deuxième exemple est d’illustrer la construction d’une statistique un peu plus complexe et la manière de projeter celle-ci sur une carte.</p>
+<p>Pour avoir la répartition des plus de 60 ans par département, quelques lignes de <code>dplyr</code> suffisent:</p>
+<div id="fdc6e8a7" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Query to calculate total population and population over 60</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>part_population_60_plus <span class="op">=</span> duckdb.sql(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT </span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="ss">        DEPT,</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="ss">        SUM(IPONDI) AS total_population,</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="ss">        SUM(CASE WHEN AGED &gt; 60 THEN IPONDI ELSE 0 END) AS population_60_plus</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="ss">    GROUP BY DEPT</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>).to_df()</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percentage of population over 60</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>part_population_60_plus[<span class="st">'pourcentage_60_plus'</span>] <span class="op">=</span> (</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    part_population_60_plus[<span class="st">'population_60_plus'</span>] <span class="op">/</span> part_population_60_plus[<span class="st">'total_population'</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the result</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>part_population_60_plus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">DEPT</th>
+<th data-quarto-table-cell-role="th">total_population</th>
+<th data-quarto-table-cell-role="th">population_60_plus</th>
+<th data-quarto-table-cell-role="th">pourcentage_60_plus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>05</td>
+<td>1.404001e+05</td>
+<td>45765.214315</td>
+<td>32.596276</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>07</td>
+<td>3.293985e+05</td>
+<td>106376.792061</td>
+<td>32.294255</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>41</td>
+<td>3.293422e+05</td>
+<td>104671.498757</td>
+<td>31.781984</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>42</td>
+<td>7.683032e+05</td>
+<td>219589.165898</td>
+<td>28.581056</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>45</td>
+<td>6.827497e+05</td>
+<td>178146.809475</td>
+<td>26.092549</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>23</td>
+<td>1.161781e+05</td>
+<td>45561.145020</td>
+<td>39.216636</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>25</td>
+<td>5.450884e+05</td>
+<td>138643.483924</td>
+<td>25.435047</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>60</td>
+<td>8.296354e+05</td>
+<td>191667.259892</td>
+<td>23.102590</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>61</td>
+<td>2.782949e+05</td>
+<td>93452.962115</td>
+<td>33.580552</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>77</td>
+<td>1.428738e+06</td>
+<td>287073.307178</td>
+<td>20.092786</td>
+</tr>
+</tbody>
+</table>
+
+<p>100 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<p>Il ne reste plus qu’à projeter ceci sur une carte. Pour cela, un <em>join</em> à notre fond de carte suffit. Comme les données sont agrégées et déjà dans <code>R</code>, il n’y a rien de spécifique à <code>duckdb</code> ici.</p>
+<div id="db4c2275" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Association de part_population_60_plus au fond de carte des départements</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Joindre les données au fond de carte des départements</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>departements_60_plus_gpd <span class="op">=</span> (</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  departements</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      part_population_60_plus,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>      left_on <span class="op">=</span> <span class="st">"INSEE_DEP"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      right_on <span class="op">=</span> <span class="st">"DEPT"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Finalement, il ne reste plus qu’à produire la carte:</p>
+<div id="be32e573" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>departements_60_plus_gpd[<span class="st">'pourcentage_60_plus_d'</span>] <span class="op">=</span> pd.qcut(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  departements_60_plus_gpd[<span class="st">'pourcentage_60_plus'</span>],</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  q<span class="op">=</span><span class="dv">4</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="dbcf723e" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  ggplot(departements_60_plus_gpd) <span class="op">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    geom_map(aes(fill <span class="op">=</span> <span class="st">"pourcentage_60_plus_d"</span>)) <span class="op">+</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    scale_fill_brewer(palette <span class="op">=</span> <span class="st">"PuBuGn"</span>, direction <span class="op">=</span> <span class="dv">1</span>) <span class="op">+</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    theme_void() <span class="op">+</span> </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    labs(</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        title <span class="op">=</span> <span class="st">"Part des personnes de plus de 60 ans par département"</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        caption <span class="op">=</span> <span class="st">"Source: Insee, Fichiers détails du recensement de la population"</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        fill <span class="op">=</span> <span class="st">"Part (%)"</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="python_files/figure-html/cell-22-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Si on préfère représenter ceci sous forme de tableau, on peut utiliser le <em>package</em> <a href="https://posit-dev.github.io/great-tables/articles/intro.html"><code>great tables</code></a>. Cela nécessite quelques manipulations de données en amont.</p>
+<div id="841856f6" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus.merge(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  departements.loc[:, [<span class="st">"INSEE_DEP"</span>, <span class="st">"LIBELLE_DEPARTEMENT"</span>]],</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  left_on <span class="op">=</span> <span class="st">"DEPT"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  right_on <span class="op">=</span> <span class="st">"INSEE_DEP"</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep[<span class="st">"departement"</span>] <span class="op">=</span> part_population_60_plus_dep[<span class="st">"LIBELLE_DEPARTEMENT"</span>] <span class="op">+</span> <span class="st">" ("</span> <span class="op">+</span> part_population_60_plus_dep[<span class="st">"DEPT"</span>]  <span class="op">+</span> <span class="st">")"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus_dep.sort_values(<span class="st">"pourcentage_60_plus"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b5846fb7" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> great_tables <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  GT(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    part_population_60_plus_dep.loc[</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>      :, [<span class="st">'departement'</span>, <span class="st">'total_population'</span>, <span class="st">'population_60_plus'</span>, <span class="st">'pourcentage_60_plus'</span>]</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  .fmt_number(columns<span class="op">=</span>[</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"total_population"</span>, <span class="st">"population_60_plus"</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  ], compact<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  .fmt_percent(<span class="st">"pourcentage_60_plus"</span>, scale_values <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  .fmt_nanoplot(columns<span class="op">=</span><span class="st">"pourcentage_60_plus"</span>, plot_type<span class="op">=</span><span class="st">"bar"</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div id="lsrzovjymy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>
+#lsrzovjymy table {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#lsrzovjymy thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#lsrzovjymy p { margin: 0; padding: 0; }
+ #lsrzovjymy .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #lsrzovjymy .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #lsrzovjymy .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #lsrzovjymy .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #lsrzovjymy .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #lsrzovjymy .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #lsrzovjymy .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #lsrzovjymy .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #lsrzovjymy .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #lsrzovjymy .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #lsrzovjymy .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #lsrzovjymy .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #lsrzovjymy .gt_spanner_row { border-bottom-style: hidden; }
+ #lsrzovjymy .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #lsrzovjymy .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #lsrzovjymy .gt_from_md> :first-child { margin-top: 0; }
+ #lsrzovjymy .gt_from_md> :last-child { margin-bottom: 0; }
+ #lsrzovjymy .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #lsrzovjymy .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #lsrzovjymy .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #lsrzovjymy .gt_row_group_first td { border-top-width: 2px; }
+ #lsrzovjymy .gt_row_group_first th { border-top-width: 2px; }
+ #lsrzovjymy .gt_striped { background-color: rgba(128,128,128,0.05); }
+ #lsrzovjymy .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #lsrzovjymy .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #lsrzovjymy .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #lsrzovjymy .gt_left { text-align: left; }
+ #lsrzovjymy .gt_center { text-align: center; }
+ #lsrzovjymy .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #lsrzovjymy .gt_font_normal { font-weight: normal; }
+ #lsrzovjymy .gt_font_bold { font-weight: bold; }
+ #lsrzovjymy .gt_font_italic { font-style: italic; }
+ #lsrzovjymy .gt_super { font-size: 65%; }
+ #lsrzovjymy .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #lsrzovjymy .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="departement" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">departement</th>
+<th id="total_population" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">total_population</th>
+<th id="population_60_plus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">population_60_plus</th>
+<th id="pourcentage_60_plus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pourcentage_60_plus</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left">Creuse (23)</td>
+<td class="gt_row gt_right">116.18K</td>
+<td class="gt_row gt_right">45.56K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="600.0" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">39.2</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Lot (46)</td>
+<td class="gt_row gt_right">174.40K</td>
+<td class="gt_row gt_right">67.12K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="588.855235058379" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">38.5</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">Nièvre (58)</td>
+<td class="gt_row gt_right">202.73K</td>
+<td class="gt_row gt_right">76.11K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="574.3756687173989" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">37.5</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Dordogne (24)</td>
+<td class="gt_row gt_right">413.18K</td>
+<td class="gt_row gt_right">153.40K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="568.04165692543" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">37.1</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">Cantal (15)</td>
+<td class="gt_row gt_right">144.32K</td>
+<td class="gt_row gt_right">51.59K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="546.9575398525653" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.7</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Gers (32)</td>
+<td class="gt_row gt_right">191.74K</td>
+<td class="gt_row gt_right">68.26K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="544.6919618789116" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.6</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">Indre (36)</td>
+<td class="gt_row gt_right">218.47K</td>
+<td class="gt_row gt_right">77.54K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="543.0029883118533" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.5</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Charente-Maritime (17)</td>
+<td class="gt_row gt_right">655.65K</td>
+<td class="gt_row gt_right">232.01K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="541.3885110238548" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.4</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">Allier (03)</td>
+<td class="gt_row gt_right">335.38K</td>
+<td class="gt_row gt_right">118.48K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="540.4971877619718" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.3</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Corrèze (19)</td>
+<td class="gt_row gt_right">239.29K</td>
+<td class="gt_row gt_right">84.51K</td>
+<td class="gt_row gt_right"><div>
+<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
+<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
+<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
+<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="540.3507650735703" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.3</text></g>
+</svg>
+</div></td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+        
+</div>
+</div>
+</section>
+<section id="exemple-3-part-des-résidences-secondaires-et-des-logements-vacants" class="level3">
+<h3 class="anchored" data-anchor-id="exemple-3-part-des-résidences-secondaires-et-des-logements-vacants">Exemple 3: part des résidences secondaires et des logements vacants</h3>
+<p>Il est tout à fait possible de faire des étapes antérieures de préparation de données, notamment de création de variables avec <code>mutate</code>.</p>
+<p>L’exemple suivant illustre la préparation de données avant la construction de statistiques descriptives de la manière suivante:</p>
+<ol type="1">
+<li>Création d’une variable de département à partir du code commune</li>
+<li>Décompte des logements par département</li>
+</ol>
+<p><strong>Suite du tutoriel à venir</strong></p>
+
+
+</section>
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Pour en savoir plus sur ce projet, se rendre sur la <a href="https://inseefrlab.github.io/cartiflette-website/">documentation</a> du projet.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/linogaliana\.github\.io\/parquet-recensement-tutomate\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      const annoteTargets = window.document.querySelectorAll('.code-annotation-anchor');
+      for (let i=0; i<annoteTargets.length; i++) {
+        const annoteTarget = annoteTargets[i];
+        const targetCell = annoteTarget.getAttribute("data-target-cell");
+        const targetAnnotation = annoteTarget.getAttribute("data-target-annotation");
+        const contentFn = () => {
+          const content = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          if (content) {
+            const tipContent = content.cloneNode(true);
+            tipContent.classList.add("code-annotation-tip-content");
+            return tipContent.outerHTML;
+          }
+        }
+        const config = {
+          allowHTML: true,
+          content: contentFn,
+          onShow: (instance) => {
+            selectCodeLines(instance.reference);
+            instance.reference.classList.add('code-annotation-active');
+            window.tippy.hideAll();
+          },
+          onHide: (instance) => {
+            unselectCodeLines();
+            instance.reference.classList.remove('code-annotation-active');
+          },
+          maxWidth: 300,
+          delay: [50, 0],
+          duration: [200, 0],
+          offset: [5, 10],
+          arrow: true,
+          appendTo: function(el) {
+            return el.parentElement.parentElement.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'quarto',
+          placement: 'right',
+          popperOptions: {
+            modifiers: [
+            {
+              name: 'flip',
+              options: {
+                flipVariations: false, // true by default
+                allowedAutoPlacements: ['right'],
+                fallbackPlacements: ['right', 'top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left'],
+              },
+            },
+            {
+              name: 'preventOverflow',
+              options: {
+                mainAxis: false,
+                altAxis: false
+              }
+            }
+            ]        
+          }      
+        };
+        window.tippy(annoteTarget, config); 
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

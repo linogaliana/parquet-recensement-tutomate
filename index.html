@@ -163,6 +163,10 @@ window.Quarto = {
     <a class="nav-link" href="./tuto/r.html"> 
 <span class="menu-text">Tutoriel R</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./tuto/python.html"> 
+<span class="menu-text">Tutoriel Python</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -202,7 +206,7 @@ window.Quarto = {
 <p>Un ensemble de ressources pour présenter les enjeux de l’utilisation du format <code>Parquet</code> illustré à partir des données du recensement.</p>
 <div id="listing-sample-listings" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1730729390441" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1061">
+<div class="g-col-1" data-index="0" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1730739901858" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1061">
 <a href="./slides/index.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -227,7 +231,7 @@ Nov 5, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1730729390441" data-listing-reading-time-sort="20" data-listing-word-count-sort="3898">
+<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1730739901858" data-listing-reading-time-sort="20" data-listing-word-count-sort="3898">
 <a href="./tuto/r.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -249,16 +253,22 @@ Lino Galiana
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="2" data-listing-file-modified-sort="1730729390441">
-<a href="./tuto/python.qmd" class="quarto-grid-link">
+<div class="g-col-1" data-index="2" data-listing-file-modified-sort="1730739901858" data-listing-reading-time-sort="13" data-listing-word-count-sort="2403">
+<a href="./tuto/python.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/701px-Python-logo-notext.svg.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
 <div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Utilisation du format <code>Parquet</code> avec <code>Python</code> illustré à partir de quelques exemples
+</h5>
 <div class="card-text listing-description">
-
+Tutoriel <code>Python</code>
 </div>
 <div class="card-attribution card-text-small start">
 <div class="listing-author">
-
+Lino Galiana
 </div>
 </div>
 </div>
@@ -367,7 +377,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/linogaliana\.github\.io\/parquet-recensement-tutomate\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
