@@ -59,7 +59,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -102,9 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../custom.css">
@@ -218,6 +215,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<a href="https://github.com/linogaliana/parquet-recensement-tutomate" target="_blank" rel="noopener" data-original-href="https://github.com/linogaliana/parquet-recensement-tutomate"><img src="https://img.shields.io/static/v1?logo=github&amp;label=&amp;message=View%20on%20GitHub&amp;color=181717" alt="View on GitHub"></a>
+<a href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=atelier-tutomate&amp;version=2.1.14&amp;autoLaunch=true&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fparquet-recensement-tutomate%2Frefs%2Fheads%2Fmain%2Fsspcloud%2Finit-python.sh»" target="_blank" rel="noopener" data-original-href="https://datalab.sspcloud.fr/launcher/ide/vscode-python?name=atelier-tutomate&amp;version=2.1.14&amp;autoLaunch=true&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fparquet-recensement-tutomate%2Frefs%2Fheads%2Fmain%2Fsspcloud%2Finit-python.sh»"><img src="https://img.shields.io/badge/SSP%20Cloud-Lancer_avec_VSCode-blue?logo=visualstudiocode&amp;logoColor=blue" alt="Onyxia"></a>
+<a href="https://datalab.sspcloud.fr/launcher/ide/rstudio?name=atelier-tutomate-r&amp;version=2.1.10&amp;autoLaunch=true&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fparquet-recensement-tutomate%2Frefs%2Fheads%2Fmain%2Fsspcloud%2Finit-r.sh»&amp;networking.user.enabled=true" target="_blank" rel="noopener" data-original-href="https://datalab.sspcloud.fr/launcher/ide/rstudio?name=atelier-tutomate-r&amp;version=2.1.10&amp;autoLaunch=true&amp;init.personalInit=«https%3A%2F%2Fraw.githubusercontent.com%2Flinogaliana%2Fparquet-recensement-tutomate%2Frefs%2Fheads%2Fmain%2Fsspcloud%2Finit-r.sh»&amp;networking.user.enabled=true"><img src="https://img.shields.io/badge/SSP%20Cloud-Lancer_avec_R-blue?logo=rstudioide&amp;logoColor=blue" alt="Onyxia"></a>
+<p><strong>Ce tutoriel n’est pas encore fini, il sera progressivement enrichi</strong></p>
 <p>Ce tutoriel vise à offrir une approche complémentaire au guide d’utilisation des données du recensement au format <code>Parquet</code> publié sur <a href="https://ssphub.netlify.app/post/parquetrp/">https://ssphub.netlify.app</a> pour accompagner la diffusion de celles-ci par l’Insee.</p>
 <p>Il s’agit d’un tutoriel préparé pour l’atelier <a href="https://mate-shs.cnrs.fr/actions/tutomate/tuto62_parquet_galiana/"><code>tuto@mate</code></a> à l’EHESS le 5 novembre 2024. Ce tutoriel est exclusivement en <code>R</code>. Les slides de la présentation sont disponibles ci-dessous:</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -256,7 +257,7 @@ Note
 <section id="téléchargement-des-fichiers" class="level1">
 <h1>Téléchargement des fichiers</h1>
 <p>Pour commencer, nous allons télécharger les fichiers depuis internet pour limiter les échanges réseaux. Comme nous le verrons ultérieurement, ce n’est en fait pas indispensable car <code>duckdb</code> optimise les données téléchargées à chaque requête.</p>
-<div id="a343e6aa" class="cell" data-execution_count="1">
+<div id="143d93e7" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Voir le code pour télécharger les données</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
@@ -305,7 +306,7 @@ Note
 <span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"individus"</span>: {<span class="st">"url"</span>: <span class="st">"https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-individus-localises-au-canton-ou-ville-2020-1/20231023-122841/fd-indcvi-2020.parquet"</span>, <span class="st">"filename"</span>: filename_table_individu},</span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"documentation_logement"</span>: {<span class="st">"url"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/c274705f-98db-4d9b-9674-578e04f03198"</span>, <span class="st">"filename"</span>: <span class="st">"data/RPindividus_doc.csv"</span>},</span>
 <span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"documentation_individus"</span>: {<span class="st">"url"</span>: <span class="st">"https://www.data.gouv.fr/fr/datasets/r/1c6c6ab2-b766-41a4-90f0-043173d5e9d1"</span>, <span class="st">"filename"</span>: <span class="st">"data/RPlogement_doc.csv"</span>},</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"table_bpe"</span>: {<span class="st">"url"</span>: <span class="st">"https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"</span>, <span class="st">"filename"</span>: <span class="st">"data/BPE_2023.parquet"</span>}</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"table_bpe"</span>: {<span class="st">"url"</span>: <span class="st">"https://www.insee.fr/fr/statistiques/fichier/8217525/BPE23.parquet"</span>, <span class="st">"filename"</span>: <span class="st">"data/BPE2023.parquet"</span>}</span>
 <span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Boucle pour télécharger les fichiers avec des noms personnalisés (s'ils ne sont pas déjà enregistrés)</span></span>
@@ -322,7 +323,7 @@ Note
 </details>
 </div>
 <p>Nous aurons également besoin pour quelques illustrations d’un fond de carte des départements. Celui-ci peut être simplement récupéré grâce au <em>package</em> <code>cartiflette</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div id="c521f141" class="cell" data-execution_count="2">
+<div id="016c88c0" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Voir le code pour récupérer ce fond de carte</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
@@ -338,27 +339,20 @@ Note
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="47c0de52" class="cell" data-execution_count="3">
+<div id="6faa2153" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  ggplot(departements) <span class="op">+</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  geom_map() <span class="op">+</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  theme_void()</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="python_files/figure-html/cell-4-output-1.png" width="672" height="480" class="figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="création-de-la-base-de-données" class="level1">
 <h1>Création de la base de données</h1>
 <p>En principe, <code>duckdb</code> fonctionne à la manière d’une base de données. Autrement dit, on définit une base de données et effectue des requêtes (SQL ou verbes <code>tidyverse</code>) dessus. Pour créer une base de données, il suffit de faire un <code>read_parquet</code> avec le chemin du fichier.</p>
 <p>La base de données se crée tout simplement de la manière suivante:</p>
-<div id="e1db7068" class="cell" data-execution_count="4">
+<div id="ceef0568" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
@@ -367,164 +361,6 @@ Note
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="ss">  SELECT *</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ss">  LIMIT 5</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">COMMUNE</th>
-<th data-quarto-table-cell-role="th">ARM</th>
-<th data-quarto-table-cell-role="th">IRIS</th>
-<th data-quarto-table-cell-role="th">ACHL</th>
-<th data-quarto-table-cell-role="th">AEMM</th>
-<th data-quarto-table-cell-role="th">AEMMR</th>
-<th data-quarto-table-cell-role="th">AGEMEN8</th>
-<th data-quarto-table-cell-role="th">ANEM</th>
-<th data-quarto-table-cell-role="th">ANEMR</th>
-<th data-quarto-table-cell-role="th">ASCEN</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">STOCD</th>
-<th data-quarto-table-cell-role="th">SURF</th>
-<th data-quarto-table-cell-role="th">TACTM</th>
-<th data-quarto-table-cell-role="th">TPM</th>
-<th data-quarto-table-cell-role="th">TRANSM</th>
-<th data-quarto-table-cell-role="th">TRIRIS</th>
-<th data-quarto-table-cell-role="th">TYPC</th>
-<th data-quarto-table-cell-role="th">TYPL</th>
-<th data-quarto-table-cell-role="th">VOIT</th>
-<th data-quarto-table-cell-role="th">WC</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>01001</td>
-<td>ZZZZZ</td>
-<td>ZZZZZZZZZ</td>
-<td>A11</td>
-<td>1993</td>
-<td>8</td>
-<td>65</td>
-<td>29</td>
-<td>4</td>
-<td>2</td>
-<td>...</td>
-<td>10</td>
-<td>6</td>
-<td>21</td>
-<td>Z</td>
-<td>Z</td>
-<td>ZZZZZZ</td>
-<td>1</td>
-<td>1</td>
-<td>2</td>
-<td>Z</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>01001</td>
-<td>ZZZZZ</td>
-<td>ZZZZZZZZZ</td>
-<td>C113</td>
-<td>2013</td>
-<td>9</td>
-<td>40</td>
-<td>9</td>
-<td>2</td>
-<td>2</td>
-<td>...</td>
-<td>10</td>
-<td>6</td>
-<td>11</td>
-<td>1</td>
-<td>5</td>
-<td>ZZZZZZ</td>
-<td>2</td>
-<td>1</td>
-<td>2</td>
-<td>Z</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>01001</td>
-<td>ZZZZZ</td>
-<td>ZZZZZZZZZ</td>
-<td>C113</td>
-<td>2013</td>
-<td>9</td>
-<td>65</td>
-<td>9</td>
-<td>2</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>4</td>
-<td>21</td>
-<td>Z</td>
-<td>Z</td>
-<td>ZZZZZZ</td>
-<td>2</td>
-<td>1</td>
-<td>2</td>
-<td>Z</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>01001</td>
-<td>ZZZZZ</td>
-<td>ZZZZZZZZZ</td>
-<td>A12</td>
-<td>1994</td>
-<td>8</td>
-<td>65</td>
-<td>28</td>
-<td>4</td>
-<td>2</td>
-<td>...</td>
-<td>10</td>
-<td>7</td>
-<td>21</td>
-<td>Z</td>
-<td>Z</td>
-<td>ZZZZZZ</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>Z</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>01001</td>
-<td>ZZZZZ</td>
-<td>ZZZZZZZZZ</td>
-<td>C115</td>
-<td>0</td>
-<td>0</td>
-<td>YY</td>
-<td>999</td>
-<td>99</td>
-<td>Y</td>
-<td>...</td>
-<td>0</td>
-<td>Y</td>
-<td>YY</td>
-<td>Y</td>
-<td>Y</td>
-<td>ZZZZZZ</td>
-<td>Y</td>
-<td>6</td>
-<td>X</td>
-<td>Z</td>
-</tr>
-</tbody>
-</table>
-
-<p>5 rows × 69 columns</p>
-</div>
-</div>
 </div>
 <p>La chaîne d’exécution ressemble ainsi à celle-ci:</p>
 <div class="quarto-figure quarto-figure-center">
@@ -535,7 +371,7 @@ Note
 <p>Les calculs ont lieu dans <code>duckdb</code> et le résultat est transformé en <em>DataFrame</em> <code>Pandas</code> avec la méthode <code>to_df</code>.</p>
 <p>Le fait de passer par l’intermédiaire de <code>duckdb</code> et un fichier <code>Parquet</code> permet d’optimiser les besoins mémoire de <code>Python</code>. En effet, il n’est pas nécessaire d’ouvrir un fichier dans son ensemble, le transformer en objet <code>Python</code> pour n’utiliser qu’une partie des données. Nous verrons ultérieurement la manière dont les besoins mémoires sont minimisés grâce au combo <code>duckdb</code> &amp; <code>Parquet</code>.</p>
 <p>Enfin, nous pouvons importer les dictionnaires des variables qui pourront nous servir ultérieurement:</p>
-<div id="b2cb58cc" class="cell" data-execution_count="5">
+<div id="9fb56f3d" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>documentation_logement <span class="op">=</span> pd.read_csv(<span class="st">"./data/RPlogement_doc.csv"</span>, sep <span class="op">=</span> <span class="st">";"</span>)</span>
@@ -549,92 +385,13 @@ Note
 <p>L’une des forces du format <code>Parquet</code> est de simplifier l’import de fichiers volumineux qui ne comportent que quelques colonnes nous intéressant. Par exemple, la table des individus comporte 88 colonnes, il est peu probable qu’une seule analyse s’intéresse à toutes celles-ci (ou elle risque d’être fort indigeste).</p>
 <p><img src="../img/parquet-table2-enriched.png" class="img-fluid"></p>
 <p>Comme cela est illustré dans <strong>?@tip-optimisation-duckdb</strong>, la différence de volumétrie entre un fichier non filtré et un fichier filtré est importante.</p>
-<div id="e80cda71" class="cell" data-execution_count="6">
+<div id="0399de51" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> (</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ch">\"</span><span class="ss">) "</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SELECT IPONDI AS poids, AGED, VOIT "</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LIMIT 10"</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>duckdb.sql(query).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">poids</th>
-<th data-quarto-table-cell-role="th">AGED</th>
-<th data-quarto-table-cell-role="th">VOIT</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>0.865066</td>
-<td>74</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>4.987931</td>
-<td>39</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>4.987931</td>
-<td>9</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>5.013547</td>
-<td>55</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>3.478368</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>3.478368</td>
-<td>43</td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>3.478368</td>
-<td>38</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>1.003585</td>
-<td>46</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
-<td>1.003585</td>
-<td>16</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
-<td>0.984087</td>
-<td>59</td>
-<td>2</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
@@ -660,7 +417,7 @@ Comprendre l’optimisation permise par Parquet et DuckDB
 </ul>
 <p>Pour cela, nous utilisons la fonction SQL <code>EXPLAIN ANALYZE</code> disponible dans <code>duckdb</code>. Elle décompose le plan d’exécution de <code>duckdb</code>, ce qui nous permettra de comprendre la stratégie d’optimisation. Elle permet aussi de connaître le volume de données importées lorsqu’on récupère un fichier d’internet. En effet, <code>duckdb</code> est malin: plutôt que de télécharger un fichier entier pour n’en lire qu’une partie, la librairie est capable de n’importer que les blocs du fichier qui l’intéresse.</p>
 <p>Ceci nécessite l’utilisation de l’extension <code>httpfs</code> (un peu l’équivalent des <code>library</code> de <code>R</code> en <code>duckdb</code>). Elle s’installe et s’utilise de la manière suivante</p>
-<div id="1aff2b91" class="cell" data-execution_count="7">
+<div id="aee9e5d6" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"INSTALL httpfs; LOAD httpfs;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Demandons à <code>DuckDB</code> d’exécuter la requête <em>“beaucoup de colonnes, pas beaucoup de lignes”</em> et regardons le plan d’exécution et les informations données par <code>DuckDB</code>:</p>
@@ -668,7 +425,7 @@ Comprendre l’optimisation permise par Parquet et DuckDB
 <summary>
 Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
 </summary>
-<div id="108aa0ca" class="cell" data-execution_count="8">
+<div id="4533b456" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>url_table_logement <span class="op">=</span> files_to_download.get(<span class="st">"logements"</span>).get(<span class="st">"url"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>url_table_individu <span class="op">=</span> files_to_download.get(<span class="st">"individus"</span>).get(<span class="st">"url"</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -681,157 +438,28 @@ Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b0d7c9b4" class="cell" data-execution_count="9">
+<div id="84131f16" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  plan.to_df()[<span class="st">'explain_value'</span>].iloc[<span class="dv">0</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>┌─────────────────────────────────────┐
-│┌───────────────────────────────────┐│
-││    Query Profiling Information    ││
-│└───────────────────────────────────┘│
-└─────────────────────────────────────┘
- EXPLAIN ANALYZE FROM read_parquet("https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-logements-ordinaires-en-2020-1/20231023-123618/fd-logemt-2020.parquet") SELECT * LIMIT 5 
-┌─────────────────────────────────────┐
-│┌───────────────────────────────────┐│
-││         HTTPFS HTTP Stats         ││
-││                                   ││
-││            in: 19.4 MiB           ││
-││            out: 0 bytes           ││
-││              #HEAD: 1             ││
-││              #GET: 3              ││
-││              #PUT: 0              ││
-││              #POST: 0             ││
-│└───────────────────────────────────┘│
-└─────────────────────────────────────┘
-┌────────────────────────────────────────────────┐
-│┌──────────────────────────────────────────────┐│
-││               Total Time: 1.65s              ││
-│└──────────────────────────────────────────────┘│
-└────────────────────────────────────────────────┘
-┌───────────────────────────┐
-│           QUERY           │
-└─────────────┬─────────────┘
-┌─────────────┴─────────────┐
-│      EXPLAIN_ANALYZE      │
-│    ────────────────────   │
-│           0 Rows          │
-│          (0.00s)          │
-└─────────────┬─────────────┘
-┌─────────────┴─────────────┐
-│      STREAMING_LIMIT      │
-│    ────────────────────   │
-│           5 Rows          │
-│          (0.00s)          │
-└─────────────┬─────────────┘
-┌─────────────┴─────────────┐
-│         TABLE_SCAN        │
-│    ────────────────────   │
-│         Function:         │
-│        READ_PARQUET       │
-│                           │
-│        Projections:       │
-│          COMMUNE          │
-│            ARM            │
-│            IRIS           │
-│            ACHL           │
-│            AEMM           │
-│           AEMMR           │
-│          AGEMEN8          │
-│            ANEM           │
-│           ANEMR           │
-│           ASCEN           │
-│            BAIN           │
-│            BATI           │
-│          CATIRIS          │
-│            CATL           │
-│            CHAU           │
-│            CHFL           │
-│            CHOS           │
-│            CLIM           │
-│            CMBL           │
-│            CUIS           │
-│           DEROU           │
-│           DIPLM           │
-│            EAU            │
-│           EGOUL           │
-│            ELEC           │
-└───────────────────────────┘
-</code></pre>
-</div>
 </div>
 </details>
 <details>
 <summary>
 Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 </summary>
-<div id="4af69de3" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plan <span class="op">=</span> duckdb.sql(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  EXPLAIN ANALYZE</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ss">  SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("</span><span class="sc">{</span>url_table_individu<span class="sc">}</span><span class="ss">") LIMIT 10000</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0daa7954" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plan <span class="op">=</span> duckdb.sql(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  EXPLAIN ANALYZE</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ss">  SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("</span><span class="sc">{</span>url_table_individu<span class="sc">}</span><span class="ss">") LIMIT 10000</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="71fc4e5b" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  plan.to_df()[<span class="st">'explain_value'</span>].iloc[<span class="dv">0</span>]</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>┌─────────────────────────────────────┐
-│┌───────────────────────────────────┐│
-││    Query Profiling Information    ││
-│└───────────────────────────────────┘│
-└─────────────────────────────────────┘
-   EXPLAIN ANALYZE   SELECT IPONDI AS poids, AGED, VOIT FROM read_parquet("https://static.data.gouv.fr/resources/recensement-de-la-population-fichiers-detail-individus-localises-au-canton-ou-ville-2020-1/20231023-122841/fd-indcvi-2020.parquet") LIMIT 10000   
-┌─────────────────────────────────────┐
-│┌───────────────────────────────────┐│
-││         HTTPFS HTTP Stats         ││
-││                                   ││
-││            in: 2.8 MiB            ││
-││            out: 0 bytes           ││
-││              #HEAD: 1             ││
-││              #GET: 5              ││
-││              #PUT: 0              ││
-││              #POST: 0             ││
-│└───────────────────────────────────┘│
-└─────────────────────────────────────┘
-┌────────────────────────────────────────────────┐
-│┌──────────────────────────────────────────────┐│
-││               Total Time: 1.21s              ││
-│└──────────────────────────────────────────────┘│
-└────────────────────────────────────────────────┘
-┌───────────────────────────┐
-│           QUERY           │
-└─────────────┬─────────────┘
-┌─────────────┴─────────────┐
-│      EXPLAIN_ANALYZE      │
-│    ────────────────────   │
-│           0 Rows          │
-│          (0.00s)          │
-└─────────────┬─────────────┘
-┌─────────────┴─────────────┐
-│      STREAMING_LIMIT      │
-│    ────────────────────   │
-│         10000 Rows        │
-│          (0.00s)          │
-└─────────────┬─────────────┘
-┌─────────────┴─────────────┐
-│         TABLE_SCAN        │
-│    ────────────────────   │
-│         Function:         │
-│        READ_PARQUET       │
-│                           │
-│        Projections:       │
-│           IPONDI          │
-│            AGED           │
-│            VOIT           │
-│                           │
-│         12288 Rows        │
-│          (1.21s)          │
-└───────────────────────────┘
-</code></pre>
-</div>
+<div id="dd6eb325" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  plan.to_df()[<span class="st">'explain_value'</span>].iloc[<span class="dv">0</span>]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <p>La comparaison de ces plans d’exécution montre l’intérêt de faire un filtre sur les colonnes : les besoins computationnels sont drastiquement diminués. Le filtre sur les lignes n’arrive que dans un second temps, une fois les colonnes sélectionnées.</p>
@@ -840,496 +468,38 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 </div>
 </div>
 <p>DuckDB propose également des fonctionnalités pour extraire des colonnes à travers des <a href="https://fr.wikipedia.org/wiki/Expression_r%C3%A9guli%C3%A8re">expressions régulières</a>. Cette approche est également possible avec le <code>tidyverse</code></p>
-<div id="013b5eb7" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ch">\"</span><span class="ss">)</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT IPONDI AS poids, COLUMNS('.*AGE.*')</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">poids</th>
-<th data-quarto-table-cell-role="th">AGED</th>
-<th data-quarto-table-cell-role="th">AGER20</th>
-<th data-quarto-table-cell-role="th">AGEREV</th>
-<th data-quarto-table-cell-role="th">AGEREVQ</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>0.865066</td>
-<td>74</td>
-<td>79</td>
-<td>73</td>
-<td>70</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>4.987931</td>
-<td>39</td>
-<td>39</td>
-<td>38</td>
-<td>35</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>4.987931</td>
-<td>9</td>
-<td>10</td>
-<td>8</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>5.013547</td>
-<td>55</td>
-<td>54</td>
-<td>54</td>
-<td>50</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>3.478368</td>
-<td>1</td>
-<td>2</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>3.478368</td>
-<td>43</td>
-<td>54</td>
-<td>42</td>
-<td>40</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>3.478368</td>
-<td>38</td>
-<td>39</td>
-<td>37</td>
-<td>35</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>1.003585</td>
-<td>46</td>
-<td>54</td>
-<td>45</td>
-<td>45</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
-<td>1.003585</td>
-<td>16</td>
-<td>17</td>
-<td>15</td>
-<td>15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
-<td>0.984087</td>
-<td>59</td>
-<td>64</td>
-<td>58</td>
-<td>55</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
+<div id="964667a1" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ch">\"</span><span class="ss">)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT IPONDI AS poids, COLUMNS('.*AGE.*')</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="requêtes-sur-les-lignes-where" class="level2">
 <h2 class="anchored" data-anchor-id="requêtes-sur-les-lignes-where">Requêtes sur les lignes (<code>WHERE</code>)</h2>
-<div id="526f1b23" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT IPONDI, AGED, DEPT</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    WHERE DEPT IN ('11', '31', '34')</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">IPONDI</th>
-<th data-quarto-table-cell-role="th">AGED</th>
-<th data-quarto-table-cell-role="th">DEPT</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>5.027778</td>
-<td>59</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>5.027778</td>
-<td>83</td>
-<td>11</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>4.996593</td>
-<td>50</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>4.996593</td>
-<td>26</td>
-<td>11</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>5.148676</td>
-<td>9</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>5.148676</td>
-<td>38</td>
-<td>11</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>5.148676</td>
-<td>49</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>5.000000</td>
-<td>88</td>
-<td>11</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
-<td>5.000000</td>
-<td>88</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
-<td>5.297153</td>
-<td>18</td>
-<td>11</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
+<div id="123db558" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT IPONDI, AGED, DEPT</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    WHERE DEPT IN ('11', '31', '34')</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Les filtres sur les observations peuvent être faits à partir de critères sur plusieurs colonnes. Par exemple, pour ne conserver que les observations de la ville de Nice où la date d’emménagement est postérieure à 2020, la requête suivante peut être utilisée :</p>
-<div id="7e20ae8a" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT *</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    WHERE COMMUNE = '06088' AND AEMM &gt; 2020</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">COMMUNE</th>
-<th data-quarto-table-cell-role="th">ARM</th>
-<th data-quarto-table-cell-role="th">IRIS</th>
-<th data-quarto-table-cell-role="th">ACHL</th>
-<th data-quarto-table-cell-role="th">AEMM</th>
-<th data-quarto-table-cell-role="th">AEMMR</th>
-<th data-quarto-table-cell-role="th">AGEMEN8</th>
-<th data-quarto-table-cell-role="th">ANEM</th>
-<th data-quarto-table-cell-role="th">ANEMR</th>
-<th data-quarto-table-cell-role="th">ASCEN</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">STOCD</th>
-<th data-quarto-table-cell-role="th">SURF</th>
-<th data-quarto-table-cell-role="th">TACTM</th>
-<th data-quarto-table-cell-role="th">TPM</th>
-<th data-quarto-table-cell-role="th">TRANSM</th>
-<th data-quarto-table-cell-role="th">TRIRIS</th>
-<th data-quarto-table-cell-role="th">TYPC</th>
-<th data-quarto-table-cell-role="th">TYPL</th>
-<th data-quarto-table-cell-role="th">VOIT</th>
-<th data-quarto-table-cell-role="th">WC</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2022</td>
-<td>9</td>
-<td>40</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>4</td>
-<td>11</td>
-<td>1</td>
-<td>5</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>1</td>
-<td>Z</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>40</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>10</td>
-<td>2</td>
-<td>11</td>
-<td>1</td>
-<td>6</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>0</td>
-<td>Z</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A12</td>
-<td>2021</td>
-<td>9</td>
-<td>25</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>2</td>
-<td>12</td>
-<td>Z</td>
-<td>Z</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>0</td>
-<td>Z</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>40</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>3</td>
-<td>11</td>
-<td>1</td>
-<td>5</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>1</td>
-<td>Z</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>40</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>3</td>
-<td>11</td>
-<td>1</td>
-<td>5</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>1</td>
-<td>Z</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>40</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>2</td>
-<td>11</td>
-<td>1</td>
-<td>2</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>0</td>
-<td>Z</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>25</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>2</td>
-<td>11</td>
-<td>1</td>
-<td>2</td>
-<td>060421</td>
-<td>2</td>
-<td>2</td>
-<td>0</td>
-<td>Z</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>40</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>2</td>
-<td>11</td>
-<td>1</td>
-<td>2</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>0</td>
-<td>Z</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>25</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>5</td>
-<td>11</td>
-<td>1</td>
-<td>6</td>
-<td>060421</td>
-<td>3</td>
-<td>2</td>
-<td>1</td>
-<td>Z</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
-<td>06088</td>
-<td>ZZZZZ</td>
-<td>060880101</td>
-<td>A11</td>
-<td>2021</td>
-<td>9</td>
-<td>55</td>
-<td>1</td>
-<td>0</td>
-<td>2</td>
-<td>...</td>
-<td>21</td>
-<td>3</td>
-<td>12</td>
-<td>Z</td>
-<td>Z</td>
-<td>060421</td>
-<td>2</td>
-<td>2</td>
-<td>0</td>
-<td>Z</td>
-</tr>
-</tbody>
-</table>
-
-<p>10 rows × 69 columns</p>
-</div>
-</div>
+<div id="1d7ec1e9" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT *</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    WHERE COMMUNE = '06088' AND AEMM &gt; 2020</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    LIMIT 10</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1338,49 +508,28 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 <section id="exemples-sans-groupes" class="level2">
 <h2 class="anchored" data-anchor-id="exemples-sans-groupes">Exemples sans groupes</h2>
 <p>La fonction <code>DISTINCT</code> appliquée à la variable <code>ARM</code> permet d’extraire la liste des codes arrondissements présents dans la base de données.</p>
-<div id="e7188d28" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet('</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">')</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT DISTINCT ARM</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ss">WHERE NOT ARM LIKE '%ZZZZZ%'</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ss">ORDER BY ARM</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="st">", "</span>.join(duckdb.sql(query).to_df()[<span class="st">"ARM"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="af493919" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet('</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">')</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT DISTINCT ARM</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ss">WHERE NOT ARM LIKE '%ZZZZZ%'</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ss">ORDER BY ARM</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="st">", "</span>.join(duckdb.sql(query).to_df()[<span class="st">"ARM"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il est possible d’extraire des statistiques beaucoup plus raffinées par le biais d’une requête SQL plus complexe. Par exemple pour calculer le nombre d’habitants de Toulouse qui ont changé de logement en un an:</p>
-<div id="3dc2c49b" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT CAST(SUM(IPONDL * CAST(INPER AS INT)) AS INT) </span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ss">AS habitants_toulouse_demenagement</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ss">WHERE COMMUNE = '31555' </span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ss">AND IRANM NOT IN ('1', 'Z') </span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ss">AND INPER != 'Y'</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>duckdb.sql(query).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="16">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">habitants_toulouse_demenagement</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>86364</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
+<div id="d871465f" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT CAST(SUM(IPONDL * CAST(INPER AS INT)) AS INT) </span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ss">AS habitants_toulouse_demenagement</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ss">WHERE COMMUNE = '31555' </span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="ss">AND IRANM NOT IN ('1', 'Z') </span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="ss">AND INPER != 'Y'</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>duckdb.sql(query).to_df()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="statistiques-par-groupe" class="level2">
@@ -1395,7 +544,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 <li>On retravaille les données</li>
 </ol>
 <p>Ensuite, une fois que nos données sont récupérées dans <code>R</code>, on peut faire la figure avec <code>ggplot</code></p>
-<div id="2e9cfaad" class="cell" data-execution_count="17">
+<div id="8c9a3ea2" class="cell" data-execution_count="17">
 <div id="lst-sud-pyramide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-sud-pyramide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1426,402 +575,97 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 </div>
 </figure>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="python_files/figure-html/cell-18-output-1.png" width="672" height="480" class="figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="exemple-2-répartition-des-plus-de-60-ans-par-département" class="level3">
 <h3 class="anchored" data-anchor-id="exemple-2-répartition-des-plus-de-60-ans-par-département">Exemple 2: répartition des plus de 60 ans par département</h3>
 <p>L’objectif de ce deuxième exemple est d’illustrer la construction d’une statistique un peu plus complexe et la manière de projeter celle-ci sur une carte.</p>
 <p>Pour avoir la répartition des plus de 60 ans par département, quelques lignes de <code>dplyr</code> suffisent:</p>
-<div id="73c7ea13" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Query to calculate total population and population over 60</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>part_population_60_plus <span class="op">=</span> duckdb.sql(</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT </span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="ss">        DEPT,</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="ss">        SUM(IPONDI) AS total_population,</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="ss">        SUM(CASE WHEN AGED &gt; 60 THEN IPONDI ELSE 0 END) AS population_60_plus</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="ss">    GROUP BY DEPT</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>).to_df()</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percentage of population over 60</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>part_population_60_plus[<span class="st">'pourcentage_60_plus'</span>] <span class="op">=</span> (</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    part_population_60_plus[<span class="st">'population_60_plus'</span>] <span class="op">/</span> part_population_60_plus[<span class="st">'total_population'</span>] <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the result</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>part_population_60_plus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">DEPT</th>
-<th data-quarto-table-cell-role="th">total_population</th>
-<th data-quarto-table-cell-role="th">population_60_plus</th>
-<th data-quarto-table-cell-role="th">pourcentage_60_plus</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>30</td>
-<td>7.512659e+05</td>
-<td>225883.785771</td>
-<td>30.067089</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>34</td>
-<td>1.188805e+06</td>
-<td>330422.004766</td>
-<td>27.794478</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>02</td>
-<td>5.294901e+05</td>
-<td>144461.254302</td>
-<td>27.283089</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>03</td>
-<td>3.353795e+05</td>
-<td>118481.100172</td>
-<td>35.327469</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>06</td>
-<td>1.097289e+06</td>
-<td>337031.519951</td>
-<td>30.714921</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">95</td>
-<td>51</td>
-<td>5.665940e+05</td>
-<td>144812.460759</td>
-<td>25.558420</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">96</td>
-<td>70</td>
-<td>2.344830e+05</td>
-<td>70894.963917</td>
-<td>30.234591</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">97</td>
-<td>71</td>
-<td>5.511182e+05</td>
-<td>181998.102753</td>
-<td>33.023424</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">98</td>
-<td>73</td>
-<td>4.394649e+05</td>
-<td>120145.543592</td>
-<td>27.339052</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">99</td>
-<td>77</td>
-<td>1.428738e+06</td>
-<td>287073.307178</td>
-<td>20.092786</td>
-</tr>
-</tbody>
-</table>
-
-<p>100 rows × 4 columns</p>
-</div>
-</div>
+<div id="2a0120d4" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Query to calculate total population and population over 60</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>part_population_60_plus <span class="op">=</span> duckdb.sql(</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    SELECT </span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="ss">        DEPT,</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="ss">        SUM(IPONDI) AS total_population,</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="ss">        SUM(CASE WHEN AGED &gt; 60 THEN IPONDI ELSE 0 END) AS population_60_plus</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="ss">    GROUP BY DEPT</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="ss">    """</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>).to_df()</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percentage of population over 60</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>part_population_60_plus[<span class="st">'pourcentage_60_plus'</span>] <span class="op">=</span> (</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    part_population_60_plus[<span class="st">'population_60_plus'</span>] <span class="op">/</span> part_population_60_plus[<span class="st">'total_population'</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the result</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>part_population_60_plus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il ne reste plus qu’à projeter ceci sur une carte. Pour cela, un <em>join</em> à notre fond de carte suffit. Comme les données sont agrégées et déjà dans <code>R</code>, il n’y a rien de spécifique à <code>duckdb</code> ici.</p>
-<div id="3b901a4b" class="cell" data-execution_count="19">
+<div id="3f3b5794" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Association de part_population_60_plus au fond de carte des départements</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Joindre les données au fond de carte des départements</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>departements_60_plus_gpd <span class="op">=</span> (</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  departements</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      part_population_60_plus,</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>      left_on <span class="op">=</span> <span class="st">"INSEE_DEP"</span>,</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      right_on <span class="op">=</span> <span class="st">"DEPT"</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Joindre les données au fond de carte des départements</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>departements_60_plus_gpd <span class="op">=</span> (</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  departements</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      part_population_60_plus,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      left_on <span class="op">=</span> <span class="st">"INSEE_DEP"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>      right_on <span class="op">=</span> <span class="st">"DEPT"</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Finalement, il ne reste plus qu’à produire la carte:</p>
-<div id="b08a35ee" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>departements_60_plus_gpd[<span class="st">'pourcentage_60_plus_d'</span>] <span class="op">=</span> pd.qcut(</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  departements_60_plus_gpd[<span class="st">'pourcentage_60_plus'</span>],</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  q<span class="op">=</span><span class="dv">4</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2d4e3324" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>departements_60_plus_gpd[<span class="st">'pourcentage_60_plus_d'</span>] <span class="op">=</span> pd.qcut(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  departements_60_plus_gpd[<span class="st">'pourcentage_60_plus'</span>],</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  q<span class="op">=</span><span class="dv">4</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6fa48b22" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  ggplot(departements_60_plus_gpd) <span class="op">+</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    geom_map(aes(fill <span class="op">=</span> <span class="st">"pourcentage_60_plus_d"</span>)) <span class="op">+</span> </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    scale_fill_brewer(palette <span class="op">=</span> <span class="st">"PuBuGn"</span>, direction <span class="op">=</span> <span class="dv">1</span>) <span class="op">+</span> </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    theme_void() <span class="op">+</span> </span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    labs(</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        title <span class="op">=</span> <span class="st">"Part des personnes de plus de 60 ans par département"</span>,</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        caption <span class="op">=</span> <span class="st">"Source: Insee, Fichiers détails du recensement de la population"</span>,</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        fill <span class="op">=</span> <span class="st">"Part (%)"</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="python_files/figure-html/cell-22-output-1.png" width="672" height="480" class="figure-img"></p>
-</figure>
-</div>
-</div>
+<div id="9ce8b8d4" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  ggplot(departements_60_plus_gpd) <span class="op">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    geom_map(aes(fill <span class="op">=</span> <span class="st">"pourcentage_60_plus_d"</span>)) <span class="op">+</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    scale_fill_brewer(palette <span class="op">=</span> <span class="st">"PuBuGn"</span>, direction <span class="op">=</span> <span class="dv">1</span>) <span class="op">+</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    theme_void() <span class="op">+</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    labs(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        title <span class="op">=</span> <span class="st">"Part des personnes de plus de 60 ans par département"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        caption <span class="op">=</span> <span class="st">"Source: Insee, Fichiers détails du recensement de la population"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        fill <span class="op">=</span> <span class="st">"Part (%)"</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Si on préfère représenter ceci sous forme de tableau, on peut utiliser le <em>package</em> <a href="https://posit-dev.github.io/great-tables/articles/intro.html"><code>great tables</code></a>. Cela nécessite quelques manipulations de données en amont.</p>
-<div id="b63ba47b" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus.merge(</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  departements.loc[:, [<span class="st">"INSEE_DEP"</span>, <span class="st">"LIBELLE_DEPARTEMENT"</span>]],</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  left_on <span class="op">=</span> <span class="st">"DEPT"</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  right_on <span class="op">=</span> <span class="st">"INSEE_DEP"</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep[<span class="st">"departement"</span>] <span class="op">=</span> part_population_60_plus_dep[<span class="st">"LIBELLE_DEPARTEMENT"</span>] <span class="op">+</span> <span class="st">" ("</span> <span class="op">+</span> part_population_60_plus_dep[<span class="st">"DEPT"</span>]  <span class="op">+</span> <span class="st">")"</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus_dep.sort_values(<span class="st">"pourcentage_60_plus"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b829828d" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus.merge(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  departements.loc[:, [<span class="st">"INSEE_DEP"</span>, <span class="st">"LIBELLE_DEPARTEMENT"</span>]],</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  left_on <span class="op">=</span> <span class="st">"DEPT"</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  right_on <span class="op">=</span> <span class="st">"INSEE_DEP"</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep[<span class="st">"departement"</span>] <span class="op">=</span> part_population_60_plus_dep[<span class="st">"LIBELLE_DEPARTEMENT"</span>] <span class="op">+</span> <span class="st">" ("</span> <span class="op">+</span> part_population_60_plus_dep[<span class="st">"DEPT"</span>]  <span class="op">+</span> <span class="st">")"</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus_dep.sort_values(<span class="st">"pourcentage_60_plus"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="de1d0fab" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> great_tables <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  GT(</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    part_population_60_plus_dep.loc[</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>      :, [<span class="st">'departement'</span>, <span class="st">'total_population'</span>, <span class="st">'population_60_plus'</span>, <span class="st">'pourcentage_60_plus'</span>]</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  .fmt_number(columns<span class="op">=</span>[</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"total_population"</span>, <span class="st">"population_60_plus"</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  ], compact<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  .fmt_percent(<span class="st">"pourcentage_60_plus"</span>, scale_values <span class="op">=</span> <span class="va">False</span>)</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  .fmt_nanoplot(columns<span class="op">=</span><span class="st">"pourcentage_60_plus"</span>, plot_type<span class="op">=</span><span class="st">"bar"</span>)</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
-<div id="daemppozxk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>
-#daemppozxk table {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-#daemppozxk thead, tbody, tfoot, tr, td, th { border-style: none; }
- tr { background-color: transparent; }
-#daemppozxk p { margin: 0; padding: 0; }
- #daemppozxk .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #daemppozxk .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #daemppozxk .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #daemppozxk .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #daemppozxk .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #daemppozxk .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #daemppozxk .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #daemppozxk .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #daemppozxk .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #daemppozxk .gt_column_spanner_outer:first-child { padding-left: 0; }
- #daemppozxk .gt_column_spanner_outer:last-child { padding-right: 0; }
- #daemppozxk .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #daemppozxk .gt_spanner_row { border-bottom-style: hidden; }
- #daemppozxk .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #daemppozxk .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #daemppozxk .gt_from_md> :first-child { margin-top: 0; }
- #daemppozxk .gt_from_md> :last-child { margin-bottom: 0; }
- #daemppozxk .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #daemppozxk .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #daemppozxk .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #daemppozxk .gt_row_group_first td { border-top-width: 2px; }
- #daemppozxk .gt_row_group_first th { border-top-width: 2px; }
- #daemppozxk .gt_striped { background-color: rgba(128,128,128,0.05); }
- #daemppozxk .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #daemppozxk .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #daemppozxk .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #daemppozxk .gt_left { text-align: left; }
- #daemppozxk .gt_center { text-align: center; }
- #daemppozxk .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #daemppozxk .gt_font_normal { font-weight: normal; }
- #daemppozxk .gt_font_bold { font-weight: bold; }
- #daemppozxk .gt_font_italic { font-style: italic; }
- #daemppozxk .gt_super { font-size: 65%; }
- #daemppozxk .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #daemppozxk .gt_asterisk { font-size: 100%; vertical-align: 0; }
- 
-</style>
-
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header gt_col_headings">
-<th id="departement" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">departement</th>
-<th id="total_population" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">total_population</th>
-<th id="population_60_plus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">population_60_plus</th>
-<th id="pourcentage_60_plus" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">pourcentage_60_plus</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left">Creuse (23)</td>
-<td class="gt_row gt_right">116.18K</td>
-<td class="gt_row gt_right">45.56K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="600.0" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">39.2</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">Lot (46)</td>
-<td class="gt_row gt_right">174.40K</td>
-<td class="gt_row gt_right">67.12K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="588.855235058379" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">38.5</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">Nièvre (58)</td>
-<td class="gt_row gt_right">202.73K</td>
-<td class="gt_row gt_right">76.11K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="574.3756687173989" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">37.5</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">Dordogne (24)</td>
-<td class="gt_row gt_right">413.18K</td>
-<td class="gt_row gt_right">153.40K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="568.04165692543" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">37.1</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">Cantal (15)</td>
-<td class="gt_row gt_right">144.32K</td>
-<td class="gt_row gt_right">51.59K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="546.9575398525653" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.7</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">Gers (32)</td>
-<td class="gt_row gt_right">191.74K</td>
-<td class="gt_row gt_right">68.26K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="544.6919618789116" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.6</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">Indre (36)</td>
-<td class="gt_row gt_right">218.47K</td>
-<td class="gt_row gt_right">77.54K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="543.0029883118533" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.5</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">Charente-Maritime (17)</td>
-<td class="gt_row gt_right">655.65K</td>
-<td class="gt_row gt_right">232.01K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="541.3885110238548" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.4</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left">Allier (03)</td>
-<td class="gt_row gt_right">335.38K</td>
-<td class="gt_row gt_right">118.48K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="540.4971877619718" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.3</text></g>
-</svg>
-</div></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left">Corrèze (19)</td>
-<td class="gt_row gt_right">239.29K</td>
-<td class="gt_row gt_right">84.51K</td>
-<td class="gt_row gt_right"><div>
-<svg role="img" viewbox="0 0 600 130" style="height: 2em; margin-left: auto; margin-right: auto; font-size: inherit; overflow: visible; vertical-align: middle; position:relative;">
-<defs><pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"><path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"></path></pattern></defs>
-<style> text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text {stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } </style>
-<line x1="0.0" y1="5.0" x2="0.0" y2="125.0" stroke="#BFBFBF" stroke-width="4"></line><rect x="0.0" y="45.0" width="540.3507650735703" height="40" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect><g class="horizontal-line"><rect x="0" y="45.0" width="600" height="40" stroke="transparent" stroke-width="12" fill="transparent"></rect><text x="10.0" y="25" fill="transparent" stroke="transparent" font-size="30px">35.3</text></g>
-</svg>
-</div></td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-        
-</div>
+<div id="5b67a8df" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> great_tables <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  GT(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    part_population_60_plus_dep.loc[</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>      :, [<span class="st">'departement'</span>, <span class="st">'total_population'</span>, <span class="st">'population_60_plus'</span>, <span class="st">'pourcentage_60_plus'</span>]</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  .fmt_number(columns<span class="op">=</span>[</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"total_population"</span>, <span class="st">"population_60_plus"</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  ], compact<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  .fmt_percent(<span class="st">"pourcentage_60_plus"</span>, scale_values <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  .fmt_nanoplot(columns<span class="op">=</span><span class="st">"pourcentage_60_plus"</span>, plot_type<span class="op">=</span><span class="st">"bar"</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exemple-3-part-des-résidences-secondaires-et-des-logements-vacants" class="level3">
@@ -1833,6 +677,10 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <li>Décompte des logements par département</li>
 </ol>
 <p><strong>Suite du tutoriel à venir</strong></p>
+<div id="9f495451" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>shutil.rmtree(<span class="st">"data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
