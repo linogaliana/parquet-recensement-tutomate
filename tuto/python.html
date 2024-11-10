@@ -260,7 +260,7 @@ Note
 <section id="téléchargement-des-fichiers" class="level1">
 <h1>Téléchargement des fichiers</h1>
 <p>Pour commencer, nous allons télécharger les fichiers depuis internet pour limiter les échanges réseaux. Comme nous le verrons ultérieurement, ce n’est en fait pas indispensable car <code>duckdb</code> optimise les données téléchargées à chaque requête.</p>
-<div id="e0d7a944" class="cell" data-execution_count="1">
+<div id="3b22d77d" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Voir le code pour télécharger les données</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
@@ -326,7 +326,7 @@ Note
 </details>
 </div>
 <p>Nous aurons également besoin pour quelques illustrations d’un fond de carte des départements. Celui-ci peut être simplement récupéré grâce au <em>package</em> <code>cartiflette</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div id="7309dcaf" class="cell" data-execution_count="2">
+<div id="f507caf8" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Voir le code pour récupérer ce fond de carte</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cartiflette <span class="im">import</span> carti_download</span>
@@ -342,7 +342,7 @@ Note
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="b25d2da6" class="cell" data-execution_count="3">
+<div id="36e296be" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  ggplot(departements) <span class="op">+</span></span>
@@ -362,7 +362,7 @@ Note
 <h1>Création de la base de données</h1>
 <p>En principe, <code>duckdb</code> fonctionne à la manière d’une base de données. Autrement dit, on définit une base de données et effectue des requêtes (SQL ou verbes <code>tidyverse</code>) dessus. Pour créer une base de données, il suffit de faire un <code>read_parquet</code> avec le chemin du fichier.</p>
 <p>La base de données se crée tout simplement de la manière suivante:</p>
-<div id="b4f54a24" class="cell" data-execution_count="4">
+<div id="6bd52453" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
@@ -539,7 +539,7 @@ Note
 <p>Les calculs ont lieu dans <code>duckdb</code> et le résultat est transformé en <em>DataFrame</em> <code>Pandas</code> avec la méthode <code>to_df</code>.</p>
 <p>Le fait de passer par l’intermédiaire de <code>duckdb</code> et un fichier <code>Parquet</code> permet d’optimiser les besoins mémoire de <code>Python</code>. En effet, il n’est pas nécessaire d’ouvrir un fichier dans son ensemble, le transformer en objet <code>Python</code> pour n’utiliser qu’une partie des données. Nous verrons ultérieurement la manière dont les besoins mémoires sont minimisés grâce au combo <code>duckdb</code> &amp; <code>Parquet</code>.</p>
 <p>Enfin, nous pouvons importer les dictionnaires des variables qui pourront nous servir ultérieurement:</p>
-<div id="8f28c806" class="cell" data-execution_count="5">
+<div id="c0397987" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>documentation_logement <span class="op">=</span> pd.read_csv(<span class="st">"./data/RPlogement_doc.csv"</span>, sep <span class="op">=</span> <span class="st">";"</span>)</span>
@@ -553,7 +553,7 @@ Note
 <p>L’une des forces du format <code>Parquet</code> est de simplifier l’import de fichiers volumineux qui ne comportent que quelques colonnes nous intéressant. Par exemple, la table des individus comporte 88 colonnes, il est peu probable qu’une seule analyse s’intéresse à toutes celles-ci (ou elle risque d’être fort indigeste).</p>
 <p><img src="../img/parquet-table2-enriched.png" class="img-fluid"></p>
 <p>Comme cela est illustré dans <strong>?@tip-optimisation-duckdb</strong>, la différence de volumétrie entre un fichier non filtré et un fichier filtré est importante.</p>
-<div id="b7d2a160" class="cell" data-execution_count="6">
+<div id="9eda096c" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> (</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ch">\"</span><span class="ss">) "</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SELECT IPONDI AS poids, AGED, VOIT "</span></span>
@@ -664,7 +664,7 @@ Comprendre l’optimisation permise par Parquet et DuckDB
 </ul>
 <p>Pour cela, nous utilisons la fonction SQL <code>EXPLAIN ANALYZE</code> disponible dans <code>duckdb</code>. Elle décompose le plan d’exécution de <code>duckdb</code>, ce qui nous permettra de comprendre la stratégie d’optimisation. Elle permet aussi de connaître le volume de données importées lorsqu’on récupère un fichier d’internet. En effet, <code>duckdb</code> est malin: plutôt que de télécharger un fichier entier pour n’en lire qu’une partie, la librairie est capable de n’importer que les blocs du fichier qui l’intéresse.</p>
 <p>Ceci nécessite l’utilisation de l’extension <code>httpfs</code> (un peu l’équivalent des <code>library</code> de <code>R</code> en <code>duckdb</code>). Elle s’installe et s’utilise de la manière suivante</p>
-<div id="ce940f10" class="cell" data-execution_count="7">
+<div id="70c892b5" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"INSTALL httpfs; LOAD httpfs;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Demandons à <code>DuckDB</code> d’exécuter la requête <em>“beaucoup de colonnes, pas beaucoup de lignes”</em> et regardons le plan d’exécution et les informations données par <code>DuckDB</code>:</p>
@@ -672,7 +672,7 @@ Comprendre l’optimisation permise par Parquet et DuckDB
 <summary>
 Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
 </summary>
-<div id="31a09968" class="cell" data-execution_count="8">
+<div id="ec1ad90b" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>url_bpe <span class="op">=</span> files_to_download.get(<span class="st">"table_bpe"</span>).get(<span class="st">"url"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plan <span class="op">=</span> duckdb.query(</span>
@@ -684,7 +684,7 @@ Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="26f90649" class="cell" data-execution_count="9">
+<div id="db623e45" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  plan.to_df()[<span class="st">'explain_value'</span>].iloc[<span class="dv">0</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -709,7 +709,7 @@ Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
 └─────────────────────────────────────┘
 ┌────────────────────────────────────────────────┐
 │┌──────────────────────────────────────────────┐│
-││               Total Time: 5.71s              ││
+││               Total Time: 4.42s              ││
 │└──────────────────────────────────────────────┘│
 └────────────────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -768,7 +768,7 @@ Voir le plan : <em>“beaucoup de colonnes, pas beaucoup de lignes”</em>
 <summary>
 Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 </summary>
-<div id="6c103cb0" class="cell" data-execution_count="10">
+<div id="f20e40d1" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plan <span class="op">=</span> duckdb.sql(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  EXPLAIN ANALYZE</span></span>
@@ -776,7 +776,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ss">  """</span></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="d4a3c6df" class="cell" data-execution_count="11">
+<div id="a53874d8" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  plan.to_df()[<span class="st">'explain_value'</span>].iloc[<span class="dv">0</span>]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -801,7 +801,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 └─────────────────────────────────────┘
 ┌────────────────────────────────────────────────┐
 │┌──────────────────────────────────────────────┐│
-││               Total Time: 1.95s              ││
+││               Total Time: 2.55s              ││
 │└──────────────────────────────────────────────┘│
 └────────────────────────────────────────────────┘
 ┌───────────────────────────┐
@@ -831,7 +831,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 │          LATITUDE         │
 │                           │
 │         12288 Rows        │
-│          (1.95s)          │
+│          (2.55s)          │
 └───────────────────────────┘
 </code></pre>
 </div>
@@ -843,7 +843,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 </div>
 </div>
 <p>DuckDB propose également des fonctionnalités pour extraire des colonnes à travers des <a href="https://fr.wikipedia.org/wiki/Expression_r%C3%A9guli%C3%A8re">expressions régulières</a>. Cette approche est également possible avec le <code>tidyverse</code></p>
-<div id="72d1db39" class="cell" data-execution_count="12">
+<div id="d2f387cd" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="ss">f"""</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet(</span><span class="ch">\"</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ch">\"</span><span class="ss">)</span></span>
@@ -956,7 +956,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 </section>
 <section id="requêtes-sur-les-lignes-where" class="level2">
 <h2 class="anchored" data-anchor-id="requêtes-sur-les-lignes-where">Requêtes sur les lignes (<code>WHERE</code>)</h2>
-<div id="08d2ad93" class="cell" data-execution_count="13">
+<div id="b2531a36" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_individu<span class="sc">}</span><span class="ss">")</span></span>
@@ -1046,7 +1046,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 </div>
 </div>
 <p>Les filtres sur les observations peuvent être faits à partir de critères sur plusieurs colonnes. Par exemple, pour ne conserver que les observations de la ville de Nice où la date d’emménagement est postérieure à 2020, la requête suivante peut être utilisée :</p>
-<div id="f2b6b185" class="cell" data-execution_count="14">
+<div id="2cc16ab3" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>duckdb.sql(</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"""</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ss">    FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
@@ -1341,7 +1341,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 <section id="exemples-sans-groupes" class="level2">
 <h2 class="anchored" data-anchor-id="exemples-sans-groupes">Exemples sans groupes</h2>
 <p>La fonction <code>DISTINCT</code> appliquée à la variable <code>ARM</code> permet d’extraire la liste des codes arrondissements présents dans la base de données.</p>
-<div id="9ca326d0" class="cell" data-execution_count="15">
+<div id="b42d5c80" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet('</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">')</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT DISTINCT ARM</span></span>
@@ -1352,7 +1352,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="st">", "</span>.join(duckdb.sql(query).to_df()[<span class="st">"ARM"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Il est possible d’extraire des statistiques beaucoup plus raffinées par le biais d’une requête SQL plus complexe. Par exemple pour calculer le nombre d’habitants de Toulouse qui ont changé de logement en un an:</p>
-<div id="9753ae41" class="cell" data-execution_count="16">
+<div id="d9c4e146" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="ss">f"""</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM read_parquet("</span><span class="sc">{</span>filename_table_logement<span class="sc">}</span><span class="ss">")</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT CAST(SUM(IPONDL * CAST(INPER AS INT)) AS INT) </span></span>
@@ -1398,7 +1398,7 @@ Voir le plan : <em>“pas de colonnes, beaucoup de lignes”</em>
 <li>On retravaille les données</li>
 </ol>
 <p>Ensuite, une fois que nos données sont récupérées dans <code>R</code>, on peut faire la figure avec <code>ggplot</code></p>
-<div id="9f9daa63" class="cell" data-execution_count="17">
+<div id="d4865dfa" class="cell" data-execution_count="17">
 <div id="lst-sud-pyramide" class="python cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
 <figure class="quarto-float quarto-float-lst figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-sud-pyramide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1442,7 +1442,7 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <h3 class="anchored" data-anchor-id="exemple-2-répartition-des-plus-de-60-ans-par-département">Exemple 2: répartition des plus de 60 ans par département</h3>
 <p>L’objectif de ce deuxième exemple est d’illustrer la construction d’une statistique un peu plus complexe et la manière de projeter celle-ci sur une carte.</p>
 <p>Pour avoir la répartition des plus de 60 ans par département, quelques lignes de <code>dplyr</code> suffisent:</p>
-<div id="2af694a4" class="cell" data-execution_count="18">
+<div id="b7b1405e" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1482,38 +1482,38 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>36</td>
-<td>2.184686e+05</td>
-<td>77537.249050</td>
-<td>35.491251</td>
+<td>12</td>
+<td>2.795454e+05</td>
+<td>97179.184751</td>
+<td>34.763296</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>37</td>
-<td>6.119776e+05</td>
-<td>171305.033516</td>
-<td>27.992044</td>
+<td>13</td>
+<td>2.047977e+06</td>
+<td>543249.939804</td>
+<td>26.526170</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
-<td>62</td>
-<td>1.463108e+06</td>
-<td>372022.387602</td>
-<td>25.426859</td>
+<td>14</td>
+<td>6.976869e+05</td>
+<td>199433.232154</td>
+<td>28.584918</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
-<td>85</td>
-<td>6.925099e+05</td>
-<td>219234.728530</td>
-<td>31.657991</td>
+<td>30</td>
+<td>7.512659e+05</td>
+<td>225883.785771</td>
+<td>30.067089</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
-<td>87</td>
-<td>3.721453e+05</td>
-<td>117712.548104</td>
-<td>31.630808</td>
+<td>31</td>
+<td>1.415985e+06</td>
+<td>310058.602689</td>
+<td>21.897030</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">...</td>
@@ -1524,38 +1524,38 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">95</td>
-<td>57</td>
-<td>1.049516e+06</td>
-<td>278799.626512</td>
-<td>26.564589</td>
+<td>08</td>
+<td>2.699838e+05</td>
+<td>78085.651277</td>
+<td>28.922343</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">96</td>
-<td>46</td>
-<td>1.743972e+05</td>
-<td>67122.352897</td>
-<td>38.488203</td>
+<td>39</td>
+<td>2.589368e+05</td>
+<td>79378.457411</td>
+<td>30.655533</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">97</td>
-<td>47</td>
-<td>3.309191e+05</td>
-<td>111975.473233</td>
-<td>33.837718</td>
+<td>44</td>
+<td>1.445313e+06</td>
+<td>347914.791932</td>
+<td>24.071942</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">98</td>
-<td>68</td>
-<td>7.671218e+05</td>
-<td>201979.717545</td>
-<td>26.329550</td>
+<td>60</td>
+<td>8.296354e+05</td>
+<td>191667.259892</td>
+<td>23.102590</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">99</td>
-<td>76</td>
-<td>1.254974e+06</td>
-<td>331670.694285</td>
-<td>26.428497</td>
+<td>61</td>
+<td>2.782949e+05</td>
+<td>93452.962115</td>
+<td>33.580552</td>
 </tr>
 </tbody>
 </table>
@@ -1565,7 +1565,7 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 </div>
 </div>
 <p>Il ne reste plus qu’à projeter ceci sur une carte. Pour cela, un <em>join</em> à notre fond de carte suffit. Comme les données sont agrégées et déjà dans <code>R</code>, il n’y a rien de spécifique à <code>duckdb</code> ici.</p>
-<div id="b8e8373f" class="cell" data-execution_count="19">
+<div id="6b33292e" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Association de part_population_60_plus au fond de carte des départements</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Joindre les données au fond de carte des départements</span></span>
@@ -1581,13 +1581,13 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 </details>
 </div>
 <p>Finalement, il ne reste plus qu’à produire la carte:</p>
-<div id="4d22ce27" class="cell" data-execution_count="20">
+<div id="9b4b5d3d" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>departements_60_plus_gpd[<span class="st">'pourcentage_60_plus_d'</span>] <span class="op">=</span> pd.qcut(</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  departements_60_plus_gpd[<span class="st">'pourcentage_60_plus'</span>],</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  q<span class="op">=</span><span class="dv">4</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="700ee45f" class="cell" data-execution_count="21">
+<div id="1f249c62" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  ggplot(departements_60_plus_gpd) <span class="op">+</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    geom_map(aes(fill <span class="op">=</span> <span class="st">"pourcentage_60_plus_d"</span>)) <span class="op">+</span> </span>
@@ -1608,7 +1608,7 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 </div>
 </div>
 <p>Si on préfère représenter ceci sous forme de tableau, on peut utiliser le <em>package</em> <a href="https://posit-dev.github.io/great-tables/articles/intro.html"><code>great tables</code></a>. Cela nécessite quelques manipulations de données en amont.</p>
-<div id="192ff706" class="cell" data-execution_count="22">
+<div id="93c3a82a" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus.merge(</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  departements.loc[:, [<span class="st">"INSEE_DEP"</span>, <span class="st">"LIBELLE_DEPARTEMENT"</span>]],</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  left_on <span class="op">=</span> <span class="st">"DEPT"</span>,</span>
@@ -1618,7 +1618,7 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>part_population_60_plus_dep <span class="op">=</span> part_population_60_plus_dep.sort_values(<span class="st">"pourcentage_60_plus"</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="83a1d334" class="cell" data-execution_count="23">
+<div id="c5730e4e" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> great_tables <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  GT(</span>
@@ -1633,52 +1633,52 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  .fmt_nanoplot(columns<span class="op">=</span><span class="st">"pourcentage_60_plus"</span>, plot_type<span class="op">=</span><span class="st">"bar"</span>)</span>
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="23">
-<div id="rpixwxjyja" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="lhkigfzmbd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>
-#rpixwxjyja table {
+#lhkigfzmbd table {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-#rpixwxjyja thead, tbody, tfoot, tr, td, th { border-style: none; }
+#lhkigfzmbd thead, tbody, tfoot, tr, td, th { border-style: none; }
  tr { background-color: transparent; }
-#rpixwxjyja p { margin: 0; padding: 0; }
- #rpixwxjyja .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
- #rpixwxjyja .gt_caption { padding-top: 4px; padding-bottom: 4px; }
- #rpixwxjyja .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
- #rpixwxjyja .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
- #rpixwxjyja .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #rpixwxjyja .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #rpixwxjyja .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
- #rpixwxjyja .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
- #rpixwxjyja .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
- #rpixwxjyja .gt_column_spanner_outer:first-child { padding-left: 0; }
- #rpixwxjyja .gt_column_spanner_outer:last-child { padding-right: 0; }
- #rpixwxjyja .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
- #rpixwxjyja .gt_spanner_row { border-bottom-style: hidden; }
- #rpixwxjyja .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
- #rpixwxjyja .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
- #rpixwxjyja .gt_from_md> :first-child { margin-top: 0; }
- #rpixwxjyja .gt_from_md> :last-child { margin-bottom: 0; }
- #rpixwxjyja .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
- #rpixwxjyja .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
- #rpixwxjyja .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
- #rpixwxjyja .gt_row_group_first td { border-top-width: 2px; }
- #rpixwxjyja .gt_row_group_first th { border-top-width: 2px; }
- #rpixwxjyja .gt_striped { background-color: rgba(128,128,128,0.05); }
- #rpixwxjyja .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
- #rpixwxjyja .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
- #rpixwxjyja .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
- #rpixwxjyja .gt_left { text-align: left; }
- #rpixwxjyja .gt_center { text-align: center; }
- #rpixwxjyja .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
- #rpixwxjyja .gt_font_normal { font-weight: normal; }
- #rpixwxjyja .gt_font_bold { font-weight: bold; }
- #rpixwxjyja .gt_font_italic { font-style: italic; }
- #rpixwxjyja .gt_super { font-size: 65%; }
- #rpixwxjyja .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
- #rpixwxjyja .gt_asterisk { font-size: 100%; vertical-align: 0; }
+#lhkigfzmbd p { margin: 0; padding: 0; }
+ #lhkigfzmbd .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #lhkigfzmbd .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #lhkigfzmbd .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #lhkigfzmbd .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #lhkigfzmbd .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #lhkigfzmbd .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #lhkigfzmbd .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #lhkigfzmbd .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #lhkigfzmbd .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #lhkigfzmbd .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #lhkigfzmbd .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #lhkigfzmbd .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #lhkigfzmbd .gt_spanner_row { border-bottom-style: hidden; }
+ #lhkigfzmbd .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #lhkigfzmbd .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #lhkigfzmbd .gt_from_md> :first-child { margin-top: 0; }
+ #lhkigfzmbd .gt_from_md> :last-child { margin-bottom: 0; }
+ #lhkigfzmbd .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #lhkigfzmbd .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #lhkigfzmbd .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #lhkigfzmbd .gt_row_group_first td { border-top-width: 2px; }
+ #lhkigfzmbd .gt_row_group_first th { border-top-width: 2px; }
+ #lhkigfzmbd .gt_striped { background-color: rgba(128,128,128,0.05); }
+ #lhkigfzmbd .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #lhkigfzmbd .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #lhkigfzmbd .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #lhkigfzmbd .gt_left { text-align: left; }
+ #lhkigfzmbd .gt_center { text-align: center; }
+ #lhkigfzmbd .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #lhkigfzmbd .gt_font_normal { font-weight: normal; }
+ #lhkigfzmbd .gt_font_bold { font-weight: bold; }
+ #lhkigfzmbd .gt_font_italic { font-style: italic; }
+ #lhkigfzmbd .gt_super { font-size: 65%; }
+ #lhkigfzmbd .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #lhkigfzmbd .gt_asterisk { font-size: 100%; vertical-align: 0; }
  
 </style>
 
@@ -1836,7 +1836,7 @@ Listing&nbsp;1: Pyramide des âges dans l’Aude, l’Hérault et le Gard
 <li>Décompte des logements par département</li>
 </ol>
 <p><strong>Suite du tutoriel à venir</strong></p>
-<div id="b4c80ce0" class="cell" data-execution_count="24">
+<div id="34e381d8" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>shutil.rmtree(<span class="st">"data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1945,7 +1945,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/linogaliana\.github\.io\/parquet-recensement-tutomate\/");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
