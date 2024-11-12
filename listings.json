@@ -2,7 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/slides/index.html",
       "/tuto/r.html",
       "/tuto/python.html",
       "/tuto/observablehq.html"

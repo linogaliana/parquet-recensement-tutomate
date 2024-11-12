@@ -80,9 +80,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description"],
+      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -156,7 +156,7 @@ window.Quarto = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./slides/index.html"> 
+    <a class="nav-link" href="https://linogaliana.github.io/parquet-recensement-tutomate-slides/"> 
 <span class="menu-text">Slides</span></a>
   </li>  
   <li class="nav-item">
@@ -182,8 +182,15 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#tutoriels" id="toc-tutoriels" class="nav-link active" data-scroll-target="#tutoriels">Tutoriels</a></li>
+  <li><a href="#replay-de-la-présentation" id="toc-replay-de-la-présentation" class="nav-link" data-scroll-target="#replay-de-la-présentation"><em>Replay</em> de la présentation</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -208,34 +215,17 @@ window.Quarto = {
 
 
 <p>Un ensemble de ressources pour présenter les enjeux de l’utilisation du format <code>Parquet</code> illustré à partir des données du recensement.</p>
+<details>
+<summary>
+<em>Dérouler les <em>slides</em> ci-dessous ou <a href="https://linogaliana.github.io/parquet-recensement-tutomate-slides">cliquer ici</a> pour les afficher en plein écran.</em>
+</summary>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><iframe class="sourceCode yaml code-with-copy" src="https://linogaliana.github.io/parquet-recensement-tutomate-slides"></iframe></div>
+</details>
+<section id="tutoriels" class="level2">
+<h2 class="anchored" data-anchor-id="tutoriels">Tutoriels</h2>
 <div id="listing-sample-listings" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1730764800000" data-listing-file-modified-sort="1731227773056" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1146">
-<a href="./slides/index.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top">
-<img loading="lazy" src="./img/librairies2.png" class="thumbnail-image card-img" style="height: 150px;">
-</p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Le format de données <code>Parquet</code>
-</h5>
-<div class="card-text listing-description">
-Slides présentant les enjeux de l’utilisation du format <code>Parquet</code> et l’écosystème associé
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-Lino Galiana
-</div>
-<div class="listing-date">
-Nov 5, 2024
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1731227773060" data-listing-reading-time-sort="22" data-listing-word-count-sort="4343">
+<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1731426326197" data-listing-reading-time-sort="22" data-listing-word-count-sort="4343">
 <a href="./tuto/r.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -257,7 +247,7 @@ Lino Galiana
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="2" data-listing-file-modified-sort="1731227773056" data-listing-reading-time-sort="13" data-listing-word-count-sort="2406">
+<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1731426326197" data-listing-reading-time-sort="13" data-listing-word-count-sort="2406">
 <a href="./tuto/python.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -279,7 +269,7 @@ Lino Galiana
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="3" data-listing-file-modified-sort="1731227773056" data-listing-reading-time-sort="1" data-listing-word-count-sort="2">
+<div class="g-col-1" data-index="2" data-listing-file-modified-sort="1731426326197" data-listing-reading-time-sort="1" data-listing-word-count-sort="2">
 <a href="./tuto/observablehq.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top">
@@ -306,11 +296,14 @@ Lino Galiana
 No matching items
 </div>
 </div>
-<p><em>Replay</em> de la présentation:</p>
+</section>
+<section id="replay-de-la-présentation" class="level2">
+<h2 class="anchored" data-anchor-id="replay-de-la-présentation"><em>Replay</em> de la présentation</h2>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/Zy3GKbTHJBU?si=mkxNvG7f6QO9NyiT" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
