@@ -4,17 +4,30 @@ listing:
   id: sample-listings
   contents:
     - "tuto/*.qmd"
-    - "slides/index.qmd"
   sort: "priority"
   type: grid
 ---
 
 Un ensemble de ressources pour présenter les enjeux de l'utilisation du format `Parquet` illustré à partir des données du recensement. 
 
+<details>
+
+<summary>
+_Dérouler les _slides_ ci-dessous ou [cliquer ici](https://linogaliana.github.io/parquet-recensement-tutomate-slides) pour les afficher en plein écran._
+</summary>
+
+```{=html}
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><iframe class="sourceCode yaml code-with-copy" src="https://linogaliana.github.io/parquet-recensement-tutomate-slides"></iframe></div>
+```
+
+</details>
+
+## Tutoriels
+
 ::: {#sample-listings}
 :::
 
-_Replay_ de la présentation:
+## _Replay_ de la présentation
 
 {{< video https://www.youtube.com/embed/Zy3GKbTHJBU?si=mkxNvG7f6QO9NyiT >}}
 
